@@ -30,7 +30,7 @@ public class DriveClass {
 	static double negOne = -1.0;
 	static double expFactor = 5.0;
 	static double deadBand = 5.0;
-	static double stall = 0.45;
+	static double stall = 0.4;
 
 	public DriveClass(Joystick stickZero, AHRS ahrs){
 		this.ahrs = ahrs;
@@ -89,11 +89,11 @@ public class DriveClass {
 	
 	private double calculateTwistAxis(){
 		double twistAxis;
-		if (driveyStick.getThrottle() < -0.1){
-	       	twistAxis = (0.6*Math.pow((Math.abs(driveyStick.getThrottle())),expFactor)+stall)*negOne;
+		if (driveyStick.getTwist() < -0.1){
+	       	twistAxis = (0.6*Math.pow((Math.abs(driveyStick.getTwist())),expFactor)+stall)*negOne;
 	       }
-	   else if (driveyStick.getThrottle() > 0.1){
-	       	twistAxis = (0.6*Math.pow((Math.abs(driveyStick.getThrottle())),expFactor)+stall);
+	   else if (driveyStick.getTwist() > 0.1){
+	       	twistAxis = (0.6*Math.pow((Math.abs(driveyStick.getTwist())),expFactor)+stall);
 	       }
 	   else{
 		   twistAxis = 0.0;
@@ -103,12 +103,12 @@ public class DriveClass {
 	
 	//Drive the Robot In Tank Drive
 	public void tankDrive(){
-		roboDrive.tankDrive(calculateYAxis(), calculateThrottleAxis());
+		roboDrive.tankDrive((calculateYAxis()*-1), (calculateThrottleAxis()*-1));
 	}
 	
 	//Drive the Robot In Arcade Drive
 	public void arcadeDrive(){
-		roboDrive.arcadeDrive(calculateYAxis(),calculateTwistAxis());
+		roboDrive.arcadeDrive((calculateYAxis()*-1),(calculateTwistAxis()*-1));
 	}
 	
 
@@ -212,11 +212,11 @@ public class DriveClass {
 	}
 	
 	public void lowGear(){
-		driveSpeed.set(DoubleSolenoid.Value.kReverse);
+		driveSpeed.set(DoubleSolenoid.Value.kForward);
 	}
 	
 	public void highGear(){
-		driveSpeed.set(DoubleSolenoid.Value.kForward);
+		driveSpeed.set(DoubleSolenoid.Value.kReverse);
 	}
 	
 	public void passivePosition(){

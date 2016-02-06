@@ -26,9 +26,9 @@ public class PinsClass {
 	
 	public PinsClass(){
 		//PWM Pins
-		 topRollerPin = 0;
-		 botRollerPin = 1;
-		 teleArmMotor = 2;
+		 topRollerPin = 1;
+		 botRollerPin = 2;
+		 teleArmMotor = 0;
 		 
 		 //DIO
 		 leftLineSensor = 0;
@@ -51,12 +51,15 @@ public class PinsClass {
 		 rearRightMotorPin = 16;
 		 
 		 //Solenoid Labels
-		 intakeArmSolenoidA = 0;
+		 //one
+		 intakeArmSolenoidA = 6;
 		 intakeArmSolenoidB = 1;
+		 //three
 		 teleArmSolenoidA = 4;
-		 teleArmSolenoidB = 5;
-		 driveSolenoidA = 2;
-		 driveSolenoidB = 3;
+		 teleArmSolenoidB = 3;
+		 //two
+		 driveSolenoidA = 5;
+		 driveSolenoidB = 2;
 		 
 
 		
