@@ -340,12 +340,12 @@ public class Robot extends SampleRobot {
             }
             
             //Change the Gear to Low Gear by Clicking Button 1
-            if(moveyController.getRawButton(1)){
+            if(moveyController.getRawButton(7)){
             	drive.lowGear();
             }
             
             //Change the Gear to High Gear by Clicking Button 3
-            else if(moveyController.getRawButton(3)){
+            else if(moveyController.getRawButton(8)){
             	drive.highGear();
             }
             
@@ -355,7 +355,7 @@ public class Robot extends SampleRobot {
             }
 
 
-            if(moveyController.getRawButton(6)){
+            if(moveyController.getRawButton(1)){
             	if(tankMode){
             		tankMode = false;
             		Timer.delay(0.5);
