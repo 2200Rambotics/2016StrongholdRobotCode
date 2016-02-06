@@ -43,14 +43,19 @@ public class BallPickupClass {
 	
 	public void shoot(double speed){
 		if (armUp){ //if the arms up
+			topRoller.set(speed*-1);
+			botRoller.set(speed);
+			
+		}
+		else{ //if the arms down
 			topRoller.set(speed);
 			botRoller.set(speed*-1);
 		}
-		else{ //if the arms down
-			topRoller.set(speed*-1);
-			botRoller.set(speed);
-		}
 		
+	}
+	public void stop(){
+		topRoller.set(0.0);
+		botRoller.set(0.0);
 	}
 
 }
