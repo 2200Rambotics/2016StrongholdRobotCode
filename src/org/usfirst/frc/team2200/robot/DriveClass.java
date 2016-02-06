@@ -156,7 +156,7 @@ public class DriveClass {
 	public void driveAngle(double targetAngle){
         double angle;
         double speed;
-        while(abs(calcAngle(targetAngle, ahrs.getAngle())) > deadBand){
+        if(abs(calcAngle(targetAngle, ahrs.getAngle())) > deadBand){
         	angle = calcAngle(targetAngle, ahrs.getAngle());
         	if (angle<0){
         		speed = proportional(angle);
@@ -196,7 +196,7 @@ public class DriveClass {
 	public void resetAngle(){
         double angle;
         double speed;
-        while(abs(calcAngle(forwardAngle, ahrs.getAngle())) > deadBand){
+        if(abs(calcAngle(forwardAngle, ahrs.getAngle())) > deadBand){
         	angle = calcAngle(forwardAngle, ahrs.getAngle());
         	if (angle<0){
         		speed = proportional(angle);
