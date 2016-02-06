@@ -64,7 +64,47 @@ public class DriveClass {
         }
         else{
         	yAxis = 0.0;
-    
+        }
+        
+        return yAxis;
+
+
+	}
+	
+	
+	private double calculateThrottleAxis(){
+		double throttleAxis;
+		if (driveyStick.getThrottle() < -0.1){
+	       	throttleAxis = (0.6*Math.pow((Math.abs(driveyStick.getThrottle())),expFactor)+stall)*negOne;
+	       }
+	   else if (driveyStick.getThrottle() > 0.1){
+	       	throttleAxis = (0.6*Math.pow((Math.abs(driveyStick.getThrottle())),expFactor)+stall);
+	       }
+	   else{
+	       	throttleAxis = 0.0;
+	       }
+		return throttleAxis;
+	   }
+	
+	
+	private double calculateTwistAxis(){
+		double twistAxis;
+		if (driveyStick.getTwist() < -0.1){
+	       	twistAxis = (0.6*Math.pow((Math.abs(driveyStick.getTwist())),expFactor)+stall)*negOne;
+	       }
+	   else if (driveyStick.getTwist() > 0.1){
+	       	twistAxis = (0.6*Math.pow((Math.abs(driveyStick.getTwist())),expFactor)+stall);
+	       }
+	   else{
+		   twistAxis = 0.0;
+	       }
+		return twistAxis;
+	   }
+	
+	//Drive the Robot In Tank Drive
+	public void tankDrive(){
+		roboDrive.tankDrive((calculateYAxis()*-1), (calculateThrottleAxis()*-1));
+	}
 	
 	//Drive the Robot In Arcade Drive
 	public void arcadeDrive(){
