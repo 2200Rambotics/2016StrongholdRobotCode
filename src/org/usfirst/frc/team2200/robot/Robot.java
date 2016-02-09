@@ -63,8 +63,8 @@ public class Robot extends SampleRobot {
         
         //Declaring The Constructers of Other Classes
         drive = new DriveClass(moveyController,ahrs,leftEnc,rightEnc);
-        auto = new AutoClass(drive);
         ballPickup = new BallPickupClass();
+        auto = new AutoClass(drive,ballPickup);
         teleArm = new TelescopingArmClass();
         
         leftEnc = new Encoder(pins.leftEncPinA,pins.leftEncPinB,true,EncodingType.k1X);

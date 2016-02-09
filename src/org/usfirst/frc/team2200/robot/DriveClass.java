@@ -75,21 +75,21 @@ public class DriveClass {
 		double turnSpeed;
 		double distanceTraveled;
 		double straightSpeed;
-    	calAngle = calcAngle(angle, ahrs.getAngle());
     	distanceTraveled = calcEncoderDistance();
-    	straightSpeed = proportionalDis(distance,(distance-distanceTraveled));
-    	if (calAngle<0){
-    		turnSpeed = proportional(calAngle);
-    		roboDrive.tankDrive(turnSpeed*-1, turnSpeed);
-    	}
-    	else if (calAngle>0){
-    		turnSpeed = proportional(calAngle);
-    		roboDrive.tankDrive(turnSpeed, turnSpeed*-1);
-    	}
-    	else{
-    		roboDrive.tankDrive(straightSpeed,straightSpeed);
-    	}
-				
+		while ((distance-distanceTraveled)>0.1){
+	    	calAngle = calcAngle(angle, ahrs.getAngle());
+	    	distanceTraveled = calcEncoderDistance();
+	    	straightSpeed = proportionalDis(distance,(distance-distanceTraveled));
+	
+	    	if (calAngle<0){
+				turnSpeed = proportional(calAngle);
+				roboDrive.tankDrive(straightSpeed, straightSpeed + (turnSpeed * 0.2));
+			}
+			else{
+				turnSpeed = proportional(calAngle);
+				roboDrive.tankDrive(straightSpeed + (turnSpeed * 0.2), straightSpeed);
+			}
+		}		
 	}
 	
 	private double calculateYAxis(){

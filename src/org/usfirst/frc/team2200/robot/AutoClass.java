@@ -11,11 +11,14 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class AutoClass {
 	DriveClass drive;
+	BallPickupClass ballPickup;
 	DigitalInput leftSensor;
 	DigitalInput rightSensor;
 	PinsClass pins;
 
-	public AutoClass(DriveClass drive){
+	public AutoClass(DriveClass drive, BallPickupClass ballPickup){
+		this.drive = drive;
+		this.ballPickup = ballPickup;
 		pins = new PinsClass();
 		leftSensor = new DigitalInput(pins.leftLineSensor);
 		rightSensor = new DigitalInput(pins.rightLineSensor);
@@ -51,8 +54,14 @@ public class AutoClass {
 	public void lowGoal(){
 		drive.setAngles();
 		drive.driveTime(0.7, 2.5);
-		
-        
+		drive.resetAngle();
+		lineUp();
+		drive.driveAngle(90);
+		drive.driveStraight(4, 90); //calculate distance
+        drive.driveAngle(36); //calculate angle
+        ballPickup.autoUp(); //calculate time
+        drive.driveStraight(2.3, 36); //calculate distance
+        ballPickup.autoShoot(); //calculate time
 	}
 	
 	//Ramparts Autonomous

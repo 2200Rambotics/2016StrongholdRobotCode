@@ -2,6 +2,7 @@ package org.usfirst.frc.team2200.robot;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
 
 public class BallPickupClass {
 	DoubleSolenoid intakeArms;
@@ -53,6 +54,19 @@ public class BallPickupClass {
 		}
 		
 	}
+	
+	public void autoUp(){
+		upPosition();
+		Timer.delay(0.2);//figure out time
+		passivePosition();
+	}
+	
+	public void autoShoot(){
+		shoot(0.8); 
+		Timer.delay(0.4); //figure out time
+		stop();
+	}
+	
 	public void stop(){
 		topRoller.set(0.0);
 		botRoller.set(0.0);
