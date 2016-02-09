@@ -82,12 +82,13 @@ public class DriveClass {
     		turnSpeed = proportional(calAngle);
     		roboDrive.tankDrive(turnSpeed*-1, turnSpeed);
     	}
-    	else{
+    	else if (calAngle>0){
     		turnSpeed = proportional(calAngle);
     		roboDrive.tankDrive(turnSpeed, turnSpeed*-1);
     	}
-    	
-    	roboDrive.tankDrive(straightSpeed,straightSpeed);
+    	else{
+    		roboDrive.tankDrive(straightSpeed,straightSpeed);
+    	}
 				
 	}
 	

@@ -49,7 +49,9 @@ public class AutoClass {
 	}
 	
 	public void lowGoal(){
+		drive.setAngles();
 		drive.driveTime(0.7, 2.5);
+		
         
 	}
 	
