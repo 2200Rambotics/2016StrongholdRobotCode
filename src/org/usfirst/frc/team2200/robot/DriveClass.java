@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Encoder;
 
 import com.kauailabs.navx.frc.AHRS;
 import java.lang.Math;
@@ -26,15 +27,19 @@ public class DriveClass {
 	AHRS ahrs; 
 	PinsClass pins;
 	DoubleSolenoid driveSpeed;
+	Encoder encLeft;
+	Encoder encRight;
 	public RobotDrive roboDrive;
 	static double negOne = -1.0;
 	static double expFactor = 5.0;
 	static double deadBand = 5.0;
 	static double stall = 0.4;
 
-	public DriveClass(Joystick stickZero, AHRS ahrs){
+	public DriveClass(Joystick stickZero, AHRS ahrs, Encoder encLeft, Encoder encRight){
 		this.ahrs = ahrs;
 		this.driveyStick = stickZero;
+		this.encLeft = encLeft;
+		this.encRight = encRight;
 		pins =  new PinsClass();
 		driveSpeed = new DoubleSolenoid(pins.driveSolenoidA,pins.driveSolenoidB);
 		frontLeftMotor = new CANTalon(pins.frontLeftMotorPin);

@@ -62,7 +62,7 @@ public class Robot extends SampleRobot {
         shootyStick = new Joystick(1);
         
         //Declaring The Constructers of Other Classes
-        drive = new DriveClass(moveyController,ahrs);
+        drive = new DriveClass(moveyController,ahrs,leftEnc,rightEnc);
         auto = new AutoClass(drive);
         ballPickup = new BallPickupClass();
         teleArm = new TelescopingArmClass();
