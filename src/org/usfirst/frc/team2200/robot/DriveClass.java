@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Encoder;
 
+
 import com.kauailabs.navx.frc.AHRS;
 import java.lang.Math;
 
@@ -58,8 +59,36 @@ public class DriveClass {
     	middleRightMotor.set(pins.frontRightMotorPin);
 	}
 
-	public void driveStraight(double distance, double speed){
-		
+	public double calcEncoderDistance(){
+		long ticksPerRot = 100;
+		double ratioEncWheel = (66.0/18.0);
+		double wheelDiameter = (7.5)*0.0254; //7.5 is our wheel diameter while 0.0254 is meter per inch
+		double wheelRotations;
+		double length;
+		wheelRotations = (((encLeft.get() / ticksPerRot) + (encRight.get() / ticksPerRot)) / 2.0)*ratioEncWheel;
+		length = (wheelDiameter*Math.PI)*wheelRotations;
+		return length;
+	}
+	
+	public void driveStraight(double distance,double angle){
+		double calAngle;
+		double turnSpeed;
+		double distanceTraveled;
+		double straightSpeed;
+    	calAngle = calcAngle(angle, ahrs.getAngle());
+    	distanceTraveled = calcEncoderDistance();
+    	straightSpeed = proportionalDis(distance,(distance-distanceTraveled));
+    	if (calAngle<0){
+    		turnSpeed = proportional(calAngle);
+    		roboDrive.tankDrive(turnSpeed*-1, turnSpeed);
+    	}
+    	else{
+    		turnSpeed = proportional(calAngle);
+    		roboDrive.tankDrive(turnSpeed, turnSpeed*-1);
+    	}
+    	
+    	roboDrive.tankDrive(straightSpeed,straightSpeed);
+				
 	}
 	
 	private double calculateYAxis(){
@@ -152,6 +181,12 @@ public class DriveClass {
     	else {
     		return value*-1;
     	}
+    }
+    
+    private static double proportionalDis(double distanceWant,double distanceDelta){
+    	double speed;
+    	speed = (1-stall)*(distanceDelta/distanceWant)+stall;
+    	return speed;
     }
     
     //Calculate the Proportional Speed
