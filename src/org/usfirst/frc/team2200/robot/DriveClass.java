@@ -52,7 +52,10 @@ public class DriveClass {
     	middleLeftMotor.set(pins.frontLeftMotorPin); 							
     	middleRightMotor.set(pins.frontRightMotorPin);
 	}
-	
+
+	public void driveStraight(double distance, double speed){
+		
+	}
 	
 	private double calculateYAxis(){
 		double yAxis;
