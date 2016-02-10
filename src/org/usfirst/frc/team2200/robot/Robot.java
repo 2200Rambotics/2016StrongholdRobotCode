@@ -241,8 +241,8 @@ public class Robot extends SampleRobot {
 				e.printStackTrace();
 			}
 
-            SmartDashboard.putBoolean("Left",auto.leftSensor.get());
-            SmartDashboard.putBoolean("Right",auto.rightSensor.get());
+            SmartDashboard.putBoolean("Left",AutoClass.leftSensor.get());
+            SmartDashboard.putBoolean("Right",AutoClass.rightSensor.get());
             
             SmartDashboard.putNumber("Front Left Motor", drive.frontLeftMotor.getOutputCurrent());
             SmartDashboard.putNumber("Middle Left Motor", drive.middleLeftMotor.getOutputCurrent());
@@ -375,9 +375,7 @@ public class Robot extends SampleRobot {
         	else{
         		drive.arcadeDrive();
         	}
-        	
-
-            
+   
             
             
             Timer.delay(0.005);		// wait for a motor update time
@@ -387,6 +385,18 @@ public class Robot extends SampleRobot {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+    }
+    
+    public static boolean getLeftLineSensor() {
+    	
+    	return AutoClass.leftSensor.get();
+    	
+    }
+    
+    public static boolean geRightLineSensor() {
+    	
+    	return AutoClass.rightSensor.get();
+    	
     }
 
     /**
