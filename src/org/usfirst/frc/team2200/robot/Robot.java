@@ -270,8 +270,8 @@ public class Robot extends SampleRobot {
             }
             
             SmartDashboard.putNumber("Angle:", ahrs.getAngle());
-
-
+            SmartDashboard.putNumber("X:", ahrs.getDisplacementX());
+            
 
 
 
