@@ -75,7 +75,7 @@ public class DriveClass {
 		double turnSpeed;
 		double distanceTraveled;
 		double straightSpeed;
-    	calAngle = calcAngle(angle, ahrs.getAngle());
+    	calAngle = calcAngle(angle, ahrs.getCompassHeading());
     	distanceTraveled = calcEncoderDistance();
     	straightSpeed = proportionalDis(distance,(distance-distanceTraveled));
     	if (calAngle<0){
@@ -162,7 +162,7 @@ public class DriveClass {
 
 	//Calculate the Angle Difference
     public double calcAngle(double targetAngle, double currentAngle){
-    	SmartDashboard.putNumber("Current Angle", ahrs.getAngle());
+    	SmartDashboard.putNumber("Current Angle", ahrs.getCompassHeading());
     	double diff;
     	diff = targetAngle-currentAngle;
     	if (diff > 180.0){
@@ -201,8 +201,8 @@ public class DriveClass {
 	public void driveAngle(double targetAngle){
         double angle;
         double speed;
-        while(abs(calcAngle(targetAngle, ahrs.getAngle())) > deadBand){
-        	angle = calcAngle(targetAngle, ahrs.getAngle());
+        while(abs(calcAngle(targetAngle, ahrs.getCompassHeading())) > deadBand){
+        	angle = calcAngle(targetAngle, ahrs.getCompassHeading());
         	if (angle<0){
         		speed = proportional(angle);
         		roboDrive.tankDrive(speed*-1, speed);
@@ -220,7 +220,7 @@ public class DriveClass {
 	//Set a Start Angle and the Left, Right and, Backward Angles
 	public void setAngles(){
 		
-		forwardAngle = ahrs.getAngle();
+		forwardAngle = ahrs.getCompassHeading();
 		backwardAngle = forwardAngle+180;
 		if (backwardAngle >= 360 ){
 			backwardAngle = backwardAngle-360;
@@ -241,8 +241,8 @@ public class DriveClass {
 	public void resetAngle(){
         double angle;
         double speed;
-        while(abs(calcAngle(forwardAngle, ahrs.getAngle())) > deadBand){
-        	angle = calcAngle(forwardAngle, ahrs.getAngle());
+        while(abs(calcAngle(forwardAngle, ahrs.getCompassHeading())) > deadBand){
+        	angle = calcAngle(forwardAngle, ahrs.getCompassHeading());
         	if (angle<0){
         		speed = proportional(angle);
         		roboDrive.tankDrive(speed*-1, speed);

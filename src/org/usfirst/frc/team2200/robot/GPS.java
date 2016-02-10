@@ -36,7 +36,7 @@ public class GPS {
 		leftEnc.reset();
 		rightEnc.reset();
 		
-		forwardAngle = ahrs.getAngle();
+		forwardAngle = ahrs.getCompassHeading();
 		
 	}
 	
@@ -47,7 +47,7 @@ public class GPS {
 		
 		d = driveclass.calcEncoderDistance();
 		
-		currentAngle = ahrs.getAngle();
+		currentAngle = ahrs.getCompassHeading();
 		
 		xPosition = xPosition + (d)*Math.cos(currentAngle-forwardAngle);
 		yPosition = yPosition + (d)*Math.sin(currentAngle-forwardAngle);

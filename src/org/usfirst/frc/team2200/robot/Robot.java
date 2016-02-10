@@ -269,7 +269,7 @@ public class Robot extends SampleRobot {
             	SmartDashboard.putString("Lift Arm:","Down" );
             }
             
-            SmartDashboard.putNumber("Angle:", ahrs.getAngle());
+            SmartDashboard.putNumber("Angle:", ahrs.getCompassHeading());
 
 
 
