@@ -69,7 +69,7 @@ public class DriveClass {
 		length = (wheelDiameter*Math.PI)*wheelRotations;
 		return length;
 	}
-	
+
 	public void driveStraight(double distance,double angle){
 		double calAngle;
 		double turnSpeed;
@@ -161,7 +161,7 @@ public class DriveClass {
 		
 
 	//Calculate the Angle Difference
-    private double calcAngle(double targetAngle, double currentAngle){
+    public double calcAngle(double targetAngle, double currentAngle){
     	SmartDashboard.putNumber("Current Angle", ahrs.getAngle());
     	double diff;
     	diff = targetAngle-currentAngle;

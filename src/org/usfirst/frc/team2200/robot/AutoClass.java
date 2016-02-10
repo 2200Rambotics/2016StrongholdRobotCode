@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class AutoClass {
 	DriveClass drive;
 	BallPickupClass ballPickup;
-	DigitalInput leftSensor;
-	DigitalInput rightSensor;
+	public static DigitalInput leftSensor;
+	public static DigitalInput rightSensor;
 	PinsClass pins;
 
 	public AutoClass(DriveClass drive, BallPickupClass ballPickup){
