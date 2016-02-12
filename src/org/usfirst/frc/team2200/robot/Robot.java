@@ -61,15 +61,15 @@ public class Robot extends SampleRobot {
         moveyController = new Joystick(0);
         shootyStick = new Joystick(1);
         
+        leftEnc = new Encoder(pins.leftEncPinA,pins.leftEncPinB,true,EncodingType.k1X);
+        rightEnc = new Encoder(pins.rightEncPinA,pins.rightEncPinB,true,EncodingType.k1X);
+        
         //Declaring The Constructers of Other Classes
         drive = new DriveClass(moveyController,ahrs,leftEnc,rightEnc);
         ballPickup = new BallPickupClass();
         auto = new AutoClass(drive,ballPickup);
         teleArm = new TelescopingArmClass();
-        
-        leftEnc = new Encoder(pins.leftEncPinA,pins.leftEncPinB,true,EncodingType.k1X);
-        rightEnc = new Encoder(pins.rightEncPinA,pins.rightEncPinB,true,EncodingType.k1X);
-        
+
         leftEnc.reset();
         rightEnc.reset();
    
@@ -123,7 +123,8 @@ public class Robot extends SampleRobot {
     	
     	//The Autonomous to Run if Low Bar is Selected
     	if (defenseSelected == "Low Bar"){
-    		auto.lowGoal();
+    		drive.driveStraight(1, ahrs.getAngle());
+    		//auto.lowGoal();
 
     	}
     	//The Autonomous to Run if Ramparts is Selected
@@ -241,16 +242,18 @@ public class Robot extends SampleRobot {
 				e.printStackTrace();
 			}
 
+            //auto.testUltra();
+            
             SmartDashboard.putBoolean("Left",AutoClass.leftSensor.get());
             SmartDashboard.putBoolean("Right",AutoClass.rightSensor.get());
             
-            SmartDashboard.putNumber("Front Left Motor", drive.frontLeftMotor.getOutputCurrent());
-            SmartDashboard.putNumber("Middle Left Motor", drive.middleLeftMotor.getOutputCurrent());
-            SmartDashboard.putNumber("Rear Left Motor", drive.rearLeftMotor.getOutputCurrent());
-            
-            SmartDashboard.putNumber("Front Right Motor", drive.frontRightMotor.getOutputCurrent());
-            SmartDashboard.putNumber("Middle Right Motor", drive.middleRightMotor.getOutputCurrent());
-            SmartDashboard.putNumber("Rear Right Motor", drive.rearRightMotor.getOutputCurrent());
+//            SmartDashboard.putNumber("Front Left Motor", drive.frontLeftMotor.getOutputCurrent());
+//           // SmartDashboard.putNumber("Middle Left Motor", drive.middleLeftMotor.getOutputCurrent());
+//            SmartDashboard.putNumber("Rear Left Motor", drive.rearLeftMotor.getOutputCurrent());
+//            
+//            SmartDashboard.putNumber("Front Right Motor", drive.frontRightMotor.getOutputCurrent());
+//          //  SmartDashboard.putNumber("Middle Right Motor", drive.middleRightMotor.getOutputCurrent());
+//            SmartDashboard.putNumber("Rear Right Motor", drive.rearRightMotor.getOutputCurrent());
             
             SmartDashboard.putNumber("Left Encoder:", leftEnc.getDistance());
             SmartDashboard.putNumber("Right Encoder", rightEnc.getDistance());
@@ -271,12 +274,13 @@ public class Robot extends SampleRobot {
             
             SmartDashboard.putNumber("Angle:", ahrs.getAngle());
             SmartDashboard.putNumber("X:", ahrs.getDisplacementX());
-            
+            double length = drive.calcEncoderDistance();
+            SmartDashboard.putNumber("Meters Travelled", length);
 
 
 
             
-
+            
             //When the Trigger is Pressed Shoot
             if(shootyStick.getRawButton(1)){
             	ballPickup.shoot(1.0);
@@ -310,14 +314,16 @@ public class Robot extends SampleRobot {
             }
 
             
-            //While Button 6 is Being Pressed Deploy the Arm
+            //While Button 6 is Being Pressed Unlock and Move Up the Arm
             if(shootyStick.getRawButton(6)){
-            	teleArm.deployPosition();
+            	//unlock and up
+            	teleArm.unlockedAndUp();
             }
             
-            //While Button 7 is Being Pressed Stow the Arm
+            //While Button 7 is Being Pressed Lock the Arm
             else if(shootyStick.getRawButton(7)){
-            	teleArm.stowPosition();
+            	//lock
+            	teleArm.locked();
             }
             
             //If Neither Button is Selected Stop the Arm
@@ -328,12 +334,12 @@ public class Robot extends SampleRobot {
             
             //Extend the Telescoping Arm While Pressing Button 11
             if(shootyStick.getRawButton(11)){
-            	teleArm.extend(1);
+            	teleArm.retract(1);
             }
             
             //Retract the Telescoping Arm While Pressing Button 10
             else if(shootyStick.getRawButton(10)){
-            	teleArm.retract(1);
+            	teleArm.extend(1);
             }
             
             //If Neither Button is Being Pressed Stop the Arm
@@ -341,12 +347,12 @@ public class Robot extends SampleRobot {
             	teleArm.stop();
             }
             
-            //Change the Gear to Low Gear by Clicking Button 1
+            //Change the Gear to Low Gear by Clicking Button 7
             if(moveyController.getRawButton(7)){
             	drive.lowGear();
             }
             
-            //Change the Gear to High Gear by Clicking Button 3
+            //Change the Gear to High Gear by Clicking Button 8
             else if(moveyController.getRawButton(8)){
             	drive.highGear();
             }
@@ -403,6 +409,8 @@ public class Robot extends SampleRobot {
      * Runs during test mode
      */
     public void test() {
+    	
+    	auto.testUltra();
 
     }
 }

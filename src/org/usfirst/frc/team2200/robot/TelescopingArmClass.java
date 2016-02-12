@@ -18,12 +18,12 @@ public class TelescopingArmClass {
 		
 	}
 	
-	public void deployPosition(){
+	public void unlockedAndUp(){
 		armDeployed.set(DoubleSolenoid.Value.kForward);
 		armUp = true;
 	}
 	
-	public void stowPosition(){
+	public void locked(){
 		armDeployed.set(DoubleSolenoid.Value.kReverse);
 		armUp = false;
 		

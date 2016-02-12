@@ -44,29 +44,31 @@ public class DriveClass {
 		pins =  new PinsClass();
 		driveSpeed = new DoubleSolenoid(pins.driveSolenoidA,pins.driveSolenoidB);
 		frontLeftMotor = new CANTalon(pins.frontLeftMotorPin);
-		middleLeftMotor = new CANTalon(pins.middleLeftMotorPin);
+		//middleLeftMotor = new CANTalon(pins.middleLeftMotorPin);
 		rearLeftMotor = new CANTalon(pins.rearLeftMotorPin);
 		frontRightMotor = new CANTalon(pins.frontRightMotorPin);
-		middleRightMotor = new CANTalon(pins.middleRightMotorPin);
+		//middleRightMotor = new CANTalon(pins.middleRightMotorPin);
 		rearRightMotor = new CANTalon(pins.rearRightMotorPin);
 		
 		roboDrive = new RobotDrive(frontLeftMotor,rearLeftMotor,frontRightMotor,rearRightMotor);
 		
-		middleLeftMotor.changeControlMode(TalonControlMode.Follower);
-    	middleRightMotor.changeControlMode(TalonControlMode.Follower);
+		//middleLeftMotor.changeControlMode(TalonControlMode.Follower);
+    	//middleRightMotor.changeControlMode(TalonControlMode.Follower);
     	
-    	middleLeftMotor.set(pins.frontLeftMotorPin); 							
-    	middleRightMotor.set(pins.frontRightMotorPin);
+    	//middleLeftMotor.set(pins.frontLeftMotorPin); 							
+    	//middleRightMotor.set(pins.frontRightMotorPin);
 	}
 
 	public double calcEncoderDistance(){
-		long ticksPerRot = 100;
+		double ticksPerRot = 100.0;
 		double ratioEncWheel = (66.0/18.0);
 		double wheelDiameter = (7.5)*0.0254; //7.5 is our wheel diameter while 0.0254 is meter per inch
 		double wheelRotations;
 		double length;
-		wheelRotations = (((encLeft.get() / ticksPerRot) + (encRight.get() / ticksPerRot)) / 2.0)*ratioEncWheel;
-		length = (wheelDiameter*Math.PI)*wheelRotations;
+		double encoderLeft = encLeft.get();
+		double encoderRight = encRight.get();
+		wheelRotations = (((encoderLeft / ticksPerRot) + (encoderRight / ticksPerRot)) / 2.0)*ratioEncWheel;
+		length = ((wheelDiameter*Math.PI)*wheelRotations)/15.207;
 		return length;
 	}
 
@@ -83,11 +85,11 @@ public class DriveClass {
 	
 	    	if (calAngle<0){
 				turnSpeed = proportional(calAngle);
-				roboDrive.tankDrive(straightSpeed, straightSpeed + (turnSpeed * 0.2));
+				roboDrive.tankDrive((straightSpeed)*-1, ((straightSpeed) + (turnSpeed * 0.2))*-1);
 			}
 			else{
 				turnSpeed = proportional(calAngle);
-				roboDrive.tankDrive(straightSpeed + (turnSpeed * 0.2), straightSpeed);
+				roboDrive.tankDrive((straightSpeed) + ((turnSpeed * 0.2))*-1, (straightSpeed)*-1);
 			}
 		}		
 	}
@@ -142,12 +144,12 @@ public class DriveClass {
 	
 	//Drive the Robot In Tank Drive
 	public void tankDrive(){
-		roboDrive.tankDrive((calculateYAxis()*-1), (calculateThrottleAxis()*-1));
+		roboDrive.tankDrive((calculateYAxis()), (calculateThrottleAxis()));
 	}
 	
 	//Drive the Robot In Arcade Drive
 	public void arcadeDrive(){
-		roboDrive.arcadeDrive((calculateYAxis()*-1),(calculateTwistAxis()*-1));
+		roboDrive.arcadeDrive((calculateYAxis()),(calculateTwistAxis()));
 	}
 	
 

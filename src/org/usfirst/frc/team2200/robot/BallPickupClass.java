@@ -57,13 +57,13 @@ public class BallPickupClass {
 	
 	public void autoUp(){
 		upPosition();
-		Timer.delay(0.2);//figure out time
+		Timer.delay(0.2);//TODO figure out time
 		passivePosition();
 	}
 	
 	public void autoShoot(){
 		shoot(0.8); 
-		Timer.delay(0.4); //figure out time
+		Timer.delay(0.4); //TODO figure out time
 		stop();
 	}
 	

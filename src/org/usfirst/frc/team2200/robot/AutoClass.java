@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
 
 //test comment 
 // test 2
@@ -15,6 +16,8 @@ public class AutoClass {
 	public static DigitalInput leftSensor;
 	public static DigitalInput rightSensor;
 	PinsClass pins;
+	DigitalInput ultraInput;
+	DigitalOutput ultraOutput;
 
 	public AutoClass(DriveClass drive, BallPickupClass ballPickup){
 		this.drive = drive;
@@ -22,6 +25,8 @@ public class AutoClass {
 		pins = new PinsClass();
 		leftSensor = new DigitalInput(pins.leftLineSensor);
 		rightSensor = new DigitalInput(pins.rightLineSensor);
+		ultraInput = new DigitalInput(8);
+		ultraOutput = new DigitalOutput(9);
 	}
 	
 	//Low Goal Autonomous
@@ -56,12 +61,12 @@ public class AutoClass {
 		drive.driveTime(0.7, 2.5);
 		drive.resetAngle();
 		lineUp();
-		drive.driveAngle(90);
-		drive.driveStraight(4, 90); //calculate distance
-        drive.driveAngle(36); //calculate angle
-        ballPickup.autoUp(); //calculate time
-        drive.driveStraight(2.3, 36); //calculate distance
-        ballPickup.autoShoot(); //calculate time
+		//drive.driveAngle(90);
+		drive.driveStraight(2.3, 0); //TODO calculate distance
+        drive.driveAngle(60); //TODO calculate angle
+        ballPickup.autoUp();
+        drive.driveStraight(1.2, 60); //TODO calculate distance
+        ballPickup.autoShoot(); 
 	}
 	
 	//Ramparts Autonomous
@@ -72,8 +77,18 @@ public class AutoClass {
 	}
 	
 	public void rampartsTwo(){
+		drive.setAngles();
 		drive.driveTime(0.7, 2.5);
-		
+		drive.resetAngle();
+		lineUp();
+		drive.driveAngle(90-drive.forwardAngle);
+		drive.driveStraight(1.3,90-drive.forwardAngle);
+		drive.driveAngle(0-drive.forwardAngle);	
+		drive.driveStraight(2.3, 0-drive.forwardAngle); //TODO calculate distance
+        drive.driveAngle(60-drive.forwardAngle); //TODO calculate angle
+        ballPickup.autoUp();
+        drive.driveStraight(1.2, 60-drive.forwardAngle); //TODO calculate distance
+        ballPickup.autoShoot();		
 	}
 	
 	public void rampartsThree(){
@@ -82,8 +97,18 @@ public class AutoClass {
 	}
 	
 	public void rampartsFour(){
+		drive.setAngles();
 		drive.driveTime(0.7, 2.5);
-		
+		drive.resetAngle();
+		lineUp();
+		drive.driveAngle(90);
+		drive.driveStraight(1.3,90);
+		drive.driveAngle(0);	
+		drive.driveStraight(2.3, 0); //TODO calculate distance
+        drive.driveAngle(60); //TODO calculate angle
+        ballPickup.autoUp();
+        drive.driveStraight(1.2, 60); //TODO calculate distance
+        ballPickup.autoShoot(); 		
 	}
 	
 	//Moat Autonomous
@@ -104,8 +129,18 @@ public class AutoClass {
 	}
 	
 	public void moatFour(){
+		drive.setAngles();
 		drive.driveTime(0.7, 2.5);
-		
+		drive.resetAngle();
+		lineUp();
+		drive.driveAngle(90);
+		drive.driveStraight(1.3,90);
+		drive.driveAngle(0);	
+		drive.driveStraight(2.3, 0); //TODO calculate distance
+        drive.driveAngle(60); //TODO calculate angle
+        ballPickup.autoUp();
+        drive.driveStraight(1.2, 60); //TODO calculate distance
+        ballPickup.autoShoot();	
 	}
 	
 	//Rough Terrain Autonomous
@@ -126,8 +161,18 @@ public class AutoClass {
 	}
 	
 	public void roughTerrainFour(){
+		drive.setAngles();
 		drive.driveTime(0.7, 2.5);
-		
+		drive.resetAngle();
+		lineUp();
+		drive.driveAngle(90);
+		drive.driveStraight(1.3,90);
+		drive.driveAngle(0);	
+		drive.driveStraight(2.3, 0); //TODO calculate distance
+        drive.driveAngle(60); //TODO calculate angle
+        ballPickup.autoUp();
+        drive.driveStraight(1.2, 60); //TODO calculate distance
+        ballPickup.autoShoot();		
 	}
 	
 	//Rock Wall Autonomous
@@ -148,8 +193,48 @@ public class AutoClass {
 	}
 	
 	public void rockWallFour(){
+		drive.setAngles();
 		drive.driveTime(0.7, 2.5);
-		
+		drive.resetAngle();
+		lineUp();
+		drive.driveAngle(90);
+		drive.driveStraight(1.3,90);
+		drive.driveAngle(0);	
+		drive.driveStraight(2.3, 0); //TODO calculate distance
+        drive.driveAngle(60); //TODO calculate angle
+        ballPickup.autoUp();
+        drive.driveStraight(1.2, 60); //TODO calculate distance
+        ballPickup.autoShoot();		
 	}
 	
+	public void testUltra() {
+		
+		boolean inputFound = false;
+		double previousTime = Timer.getFPGATimestamp();
+		ultraInput.requestInterrupts();
+		ultraInput.setUpSourceEdge(true, false);
+		double ultraTime = 0.0;
+		double timeRead = 0.0;
+		ultraOutput.set(true);
+		Timer.delay(0.01);
+		ultraOutput.set(false);
+		
+		//while (!inputFound) {
+			
+			timeRead = ultraInput.readRisingTimestamp();
+			
+			if (timeRead > 0.0) {
+				
+				inputFound = true;
+			}
+			
+		//}
+		
+		ultraTime = timeRead - previousTime;
+		
+		SmartDashboard.putNumber("Ultra time", ultraTime);
+		SmartDashboard.putNumber("Time read", timeRead);
+		SmartDashboard.putNumber("Previous time", previousTime);
+		
+	}
 }

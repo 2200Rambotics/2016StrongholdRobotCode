@@ -31,24 +31,24 @@ public class PinsClass {
 		 teleArmMotor = 0;
 		 
 		 //DIO
-		 leftLineSensor = 0;
-		 rightLineSensor = 1;
+		 leftLineSensor = 4;
+		 rightLineSensor = 5;
 		 
-		 leftEncPinA = 2;
-		 leftEncPinB = 3;
+		 leftEncPinA = 0;
+		 leftEncPinB = 1;
 		 
-		 rightEncPinA = 4;
-		 rightEncPinB = 5;
+		 rightEncPinA = 2;
+		 rightEncPinB = 3;
 		 
 		 
 		 //CANTalon Addresses
 		 frontLeftMotorPin = 11;
-		 middleLeftMotorPin = 12;
-		 rearLeftMotorPin = 13;
+		// middleLeftMotorPin = 12;
+		 rearLeftMotorPin = 12;
 		 
 		 frontRightMotorPin = 14;
-		 middleRightMotorPin = 15;
-		 rearRightMotorPin = 16;
+		// middleRightMotorPin = 15;
+		 rearRightMotorPin = 15;
 		 
 		 //Solenoid Labels
 		 //one
