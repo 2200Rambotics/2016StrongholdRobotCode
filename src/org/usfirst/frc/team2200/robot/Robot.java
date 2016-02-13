@@ -70,7 +70,7 @@ public class Robot extends SampleRobot {
         rightEnc = new Encoder(pins.rightEncPinA,pins.rightEncPinB,true,EncodingType.k1X);
         
         //Declaring The Constructers of Other Classes
-        drive = new DriveClass(moveyController,moveyStick,ahrs,leftEnc,rightEnc);
+        drive = new DriveClass(moveyController,moveyStick,ahrs,leftEnc,rightEnc, this);
         ballPickup = new BallPickupClass();
         auto = new AutoClass(drive,ballPickup);
         teleArm = new TelescopingArmClass();
@@ -131,8 +131,8 @@ public class Robot extends SampleRobot {
     	
     	//The Autonomous to Run if Low Bar is Selected
     	if (defenseSelected == "Low Bar"){
-    		//drive.roboDrive.tankDrive(-0.4, -0.4);
-    		drive.driveStraightCompass();
+    		drive.roboDrive.tankDrive(-0.5, -0.5);
+    		//drive.driveStraightCompass(0.6);
     		//drive.drivey(3);
     		//auto.lowGoal();
 

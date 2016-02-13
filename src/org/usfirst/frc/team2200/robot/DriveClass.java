@@ -1,8 +1,10 @@
 package org.usfirst.frc.team2200.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
@@ -36,8 +38,9 @@ public class DriveClass {
 	static double expFactor = 5.0;
 	static double deadBand = 5.0;
 	static double stall = 0.4;
+	Robot robotRef;
 
-	public DriveClass(Joystick stickZero,Joystick stickTwo,AHRS ahrs, Encoder encLeft, Encoder encRight){
+	public DriveClass(Joystick stickZero,Joystick stickTwo,AHRS ahrs, Encoder encLeft, Encoder encRight, Robot robotRef){
 		this.ahrs = ahrs;
 		this.driveyStick = stickZero;
 		this.driveyStick2 = stickTwo;
@@ -53,6 +56,7 @@ public class DriveClass {
 		rearRightMotor = new CANTalon(pins.rearRightMotorPin);
 		
 		roboDrive = new RobotDrive(frontLeftMotor,rearLeftMotor,frontRightMotor,rearRightMotor);
+		this.robotRef = robotRef;
 		
 		//middleLeftMotor.changeControlMode(TalonControlMode.Follower);
     	//middleRightMotor.changeControlMode(TalonControlMode.Follower);
@@ -78,30 +82,37 @@ public class DriveClass {
 		
 	}
 	
-	public void driveStraightCompass(){
+	public void driveStraightCompass(double speed){
 		double turnSpeed;
 		double calAngle;
+		double angleDeadband = 0.0;
 		double startAngle = ahrs.getAngle();
 		SmartDashboard.putNumber("Start Angle:", startAngle);
 		SmartDashboard.putString("Loop Running?", "Nah");
-		while (true){
+		while (robotRef.isAutonomous() && robotRef.isEnabled()){
 			calAngle = calcAngle(startAngle, ahrs.getAngle());
 			SmartDashboard.putNumber("Calculated Angle:", calAngle);
 			SmartDashboard.putString("Loop Running?", "Yee");
 			if (calAngle<0){
 				turnSpeed = proportional(calAngle);
+				if (abs(calAngle) < angleDeadband){
+					turnSpeed = 0;
+				}
 				SmartDashboard.putNumber("Turn Speed:", turnSpeed);
 				SmartDashboard.putNumber("Left Motor:", -0.5);
-				SmartDashboard.putNumber("Right Motor:", ((0.5+(turnSpeed*0.2)))*-1);
-				roboDrive.tankDrive((0.5)*-1, ((0.5) + (turnSpeed * 0.2))*-1);
+				SmartDashboard.putNumber("Right Motor:", ((0.5+(turnSpeed*0.6)))*-1);
+				roboDrive.tankDrive((speed)*-1, ((speed) + (turnSpeed * 0.6))*-1);
 				
 			}
 			else{
 				turnSpeed = proportional(calAngle);
+				if (abs(calAngle) < angleDeadband){
+					turnSpeed = 0;
+				}
 				SmartDashboard.putNumber("Turn Speed:", turnSpeed);
 				SmartDashboard.putNumber("Right Motor:", -0.5);
-				SmartDashboard.putNumber("Left Motor:", ((0.5+(turnSpeed*0.2)))*-1);
-				roboDrive.tankDrive(((0.5) + (turnSpeed * 0.2))*-1, (0.5)*-1);
+				SmartDashboard.putNumber("Left Motor:", ((0.5+(turnSpeed*0.6)))*-1);
+				roboDrive.tankDrive(((speed) + (turnSpeed * 0.6))*-1, (speed)*-1);
 			}
 		}
 		
