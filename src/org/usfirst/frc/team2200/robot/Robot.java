@@ -131,8 +131,8 @@ public class Robot extends SampleRobot {
     	
     	//The Autonomous to Run if Low Bar is Selected
     	if (defenseSelected == "Low Bar"){
-    		drive.roboDrive.tankDrive(-0.5, -0.5);
-    		//drive.driveStraightCompass(0.6);
+    		//drive.roboDrive.tankDrive(-0.5, -0.5);
+    		drive.driveStraightCompass(0.8);
     		//drive.drivey(3);
     		//auto.lowGoal();
 
@@ -235,7 +235,7 @@ public class Robot extends SampleRobot {
     	leftEnc.reset();
     	rightEnc.reset();
         drive.roboDrive.setSafetyEnabled(true);
-        boolean tankMode = true;
+        double tankMode = 0;
         
         
         while (isOperatorControl() && isEnabled()) {
@@ -277,10 +277,10 @@ public class Robot extends SampleRobot {
             
             //here in my garage
             if(ballPickup.armUp){
-            	SmartDashboard.putString("Intake Arms:","Up" );
+            	SmartDashboard.putString("Intake Arms:","Down" );
             }
             else{
-            	SmartDashboard.putString("Intake Arms:","Down");
+            	SmartDashboard.putString("Intake Arms:","Up");
             }
             
             if(teleArm.armUp){
@@ -335,13 +335,14 @@ public class Robot extends SampleRobot {
             //While Button 6 is Being Pressed Unlock and Move Up the Arm
             if(shootyStick.getRawButton(6)){
             	//unlock and up
-            	teleArm.unlockedAndUp();
+            	
+            	teleArm.locked();
             }
             
             //While Button 7 is Being Pressed Lock the Arm
-            else if(shootyStick.getRawButton(7)){
+            else if(shootyStick.getRawButton(7)&& shootyStick.getRawButton(8)){
             	//lock
-            	teleArm.locked();
+            	teleArm.unlockedAndUp();
             }
             
             //If Neither Button is Selected Stop the Arm
@@ -352,12 +353,16 @@ public class Robot extends SampleRobot {
             
             //Extend the Telescoping Arm While Pressing Button 11
             if(shootyStick.getRawButton(11)){
-            	teleArm.retract(1);
+            	  teleArm.retract(1);
             }
             
             //Retract the Telescoping Arm While Pressing Button 10
-            else if(shootyStick.getRawButton(10)){
+            else if(shootyStick.getRawButton(10)){ //DOWN
             	teleArm.extend(1);
+            }
+            
+            else if (shootyStick.getRawButton(9)){//UP
+            	teleArm.halfSpeed();
             }
             
             //If Neither Button is Being Pressed Stop the Arm
@@ -366,12 +371,12 @@ public class Robot extends SampleRobot {
             }
             
             //Change the Gear to Low Gear by Clicking Button 7
-            if(moveyController.getRawButton(7)){
+            if(moveyController.getRawButton(7) || moveyStick.getRawButton(2)){
             	drive.lowGear();
             }
             
             //Change the Gear to High Gear by Clicking Button 8
-            else if(moveyController.getRawButton(8)){
+            else if(moveyController.getRawButton(8) || moveyStick.getRawButton(3)){
             	drive.highGear();
             }
             
@@ -382,23 +387,27 @@ public class Robot extends SampleRobot {
 
 
             if(moveyController.getRawButton(1)){
-            	if(tankMode){
-            		tankMode = false;
+            	if(tankMode == 0){
+            		tankMode = 1;
             		Timer.delay(0.5);
             	}
-            	else{
-            		tankMode = true;
+            	else if(tankMode == 1){
+            		tankMode = 0;
             		Timer.delay(0.5);
             	}
+
 
             }
 
-        	if (tankMode){
+        	if (tankMode == 0){
+        		SmartDashboard.putString("Drive Mode:", "Corey Drive");
         		drive.tankDrive();
         	}
-        	else{
+        	else if(tankMode == 1){
+        		SmartDashboard.putString("Drive Mode:", "Jana Drive");
         		drive.arcadeDrive();
         	}
+
    
             
             

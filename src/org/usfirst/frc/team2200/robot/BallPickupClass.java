@@ -33,24 +33,24 @@ public class BallPickupClass {
 		intakeArms.set(DoubleSolenoid.Value.kOff);	
 	}
 	public void openDoor(double speed){
-		topRoller.set(speed*-1);
-		botRoller.set(speed*-1);
+		topRoller.set(speed);
+		botRoller.set(speed);
 	}
 	
 	public void intake(double speed){
-		topRoller.set(speed);
-		botRoller.set(speed*-1);
+		topRoller.set(speed*-1);
+		botRoller.set(speed);
 	}
 	
 	public void shoot(double speed){
 		if (armUp){ //if the arms up
-			topRoller.set(speed*-1);
-			botRoller.set(speed);
+			topRoller.set(speed);
+			botRoller.set(speed*-1);
 			
 		}
 		else{ //if the arms down
-			topRoller.set(speed);
-			botRoller.set(speed*-1);
+			topRoller.set(speed*-1);
+			botRoller.set(speed);
 		}
 		
 	}

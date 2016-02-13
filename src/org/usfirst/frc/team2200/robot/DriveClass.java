@@ -35,7 +35,7 @@ public class DriveClass {
 	Encoder encRight;
 	public RobotDrive roboDrive;
 	static double negOne = -1.0;
-	static double expFactor = 5.0;
+	static double expFactor = 3.0;
 	static double deadBand = 5.0;
 	static double stall = 0.4;
 	Robot robotRef;
@@ -100,8 +100,8 @@ public class DriveClass {
 				}
 				SmartDashboard.putNumber("Turn Speed:", turnSpeed);
 				SmartDashboard.putNumber("Left Motor:", -0.5);
-				SmartDashboard.putNumber("Right Motor:", ((0.5+(turnSpeed*0.6)))*-1);
-				roboDrive.tankDrive((speed)*-1, ((speed) + (turnSpeed * 0.6))*-1);
+				SmartDashboard.putNumber("Right Motor:", ((0.5+(turnSpeed*0.3)))*-1);
+				roboDrive.tankDrive((speed)*-1, ((speed) + (turnSpeed * 0.3))*-1);
 				
 			}
 			else{
@@ -111,11 +111,11 @@ public class DriveClass {
 				}
 				SmartDashboard.putNumber("Turn Speed:", turnSpeed);
 				SmartDashboard.putNumber("Right Motor:", -0.5);
-				SmartDashboard.putNumber("Left Motor:", ((0.5+(turnSpeed*0.6)))*-1);
-				roboDrive.tankDrive(((speed) + (turnSpeed * 0.6))*-1, (speed)*-1);
+				SmartDashboard.putNumber("Left Motor:", ((0.5+(turnSpeed*0.3)))*-1);
+				roboDrive.tankDrive(((speed) + (turnSpeed * 0.3))*-1, (speed)*-1);
 			}
 		}
-		
+		roboDrive.tankDrive(0, 0);
 	}
 	
 	
@@ -381,10 +381,10 @@ public class DriveClass {
 	private double calculateXAxisJoy(){
 		double yAxis;
         if (driveyStick2.getX() < -0.1){
-        	yAxis = (0.6*Math.pow((Math.abs(driveyStick2.getX())),expFactor)+stall)*negOne;
+        	yAxis = (0.6*Math.pow((Math.abs(driveyStick2.getX())),3)+stall)*negOne;
         }
         else if (driveyStick2.getX() > 0.1){
-        	yAxis = (0.6*Math.pow((Math.abs(driveyStick2.getX())),expFactor)+stall);
+        	yAxis = (0.6*Math.pow((Math.abs(driveyStick2.getX())),3)+stall);
         }
         else{
         	yAxis = 0.0;
@@ -399,10 +399,10 @@ public class DriveClass {
 	private double calculateYAxisJoy(){
 		double yAxis;
         if (driveyStick2.getY() < -0.1){
-        	yAxis = (0.6*Math.pow((Math.abs(driveyStick2.getY())),expFactor)+stall)*negOne;
+        	yAxis = (0.6*Math.pow((Math.abs(driveyStick2.getY())),3)+stall)*negOne;
         }
         else if (driveyStick2.getY() > 0.1){
-        	yAxis = (0.6*Math.pow((Math.abs(driveyStick2.getY())),expFactor)+stall);
+        	yAxis = (0.6*Math.pow((Math.abs(driveyStick2.getY())),3)+stall);
         }
         else{
         	yAxis = 0.0;
