@@ -36,7 +36,7 @@ public class DriveClass {
 	static double deadBand = 5.0;
 	static double stall = 0.4;
 
-	public DriveClass(Joystick stickZero, AHRS ahrs, Encoder encLeft, Encoder encRight){
+	public DriveClass(Joystick stickZero,Joystick stickTwo,AHRS ahrs, Encoder encLeft, Encoder encRight){
 		this.ahrs = ahrs;
 		this.driveyStick = stickZero;
 		this.encLeft = encLeft;
@@ -60,39 +60,124 @@ public class DriveClass {
 	}
 
 	public double calcEncoderDistance(){
-		double ticksPerRot = 100.0;
-		double ratioEncWheel = (66.0/18.0);
-		double wheelDiameter = (7.5)*0.0254; //7.5 is our wheel diameter while 0.0254 is meter per inch
-		double wheelRotations;
+//		double ticksPerRot = 100.0;
+//		double ratioEncWheel = (66.0/18.0);
+//		double wheelDiameter = (7.5)*0.0254; //7.5 is our wheel diameter while 0.0254 is meter per inch
+//		double wheelRotations;
 		double length;
 		double encoderLeft = encLeft.get();
 		double encoderRight = encRight.get();
-		wheelRotations = (((encoderLeft / ticksPerRot) + (encoderRight / ticksPerRot)) / 2.0)*ratioEncWheel;
-		length = ((wheelDiameter*Math.PI)*wheelRotations)/15.207;
+//		wheelRotations = (((encoderLeft / ticksPerRot) + ((encoderRight) / ticksPerRot)) / 2.0)*ratioEncWheel;
+//		length = ((wheelDiameter*Math.PI)*wheelRotations)/15.007;
+//		return length;
+		//1m = 667
+		length = ((encoderLeft/575)+ (encoderRight/575))/2;
 		return length;
+		
 	}
-
-	public void driveStraight(double distance,double angle){
-		double calAngle;
+	
+	public void driveStraightCompass(){
 		double turnSpeed;
+		double calAngle;
+		double startAngle = ahrs.getAngle();
+		SmartDashboard.putNumber("Start Angle:", startAngle);
+		while (true){
+			calAngle = calcAngle(startAngle, ahrs.getAngle());
+			SmartDashboard.putNumber("Calculated Angle:", calAngle);
+			
+			if (calAngle<0){
+				turnSpeed = proportional(calAngle);
+				SmartDashboard.putNumber("Turn Speed:", turnSpeed);
+				SmartDashboard.putNumber("Left Motor:", -0.5);
+				SmartDashboard.putNumber("Right Motor:", (-0.5+(turnSpeed*0.2)));
+				roboDrive.tankDrive((0.5)*-1, ((0.5) + (turnSpeed * 0.2))*-1);
+			}
+			else{
+				turnSpeed = proportional(calAngle);
+				SmartDashboard.putNumber("Turn Speed:", turnSpeed);
+				SmartDashboard.putNumber("Right Motor:", -0.5);
+				SmartDashboard.putNumber("Left Motor:", (-0.5+(turnSpeed*0.2)));
+				roboDrive.tankDrive((0.5) + ((turnSpeed * 0.2))*-1, (0.5)*-1);
+			}
+		}
+		
+	}
+	
+	
+	public void drivey(double distance){
+		while (calcEncoderDistance() < distance /*&& encLeft.get() < distance*/){
+			
+			SmartDashboard.putNumber("Encoder Distance Travelled", calcEncoderDistance());
+			SmartDashboard.putNumber("Encoder Distance Wanted", distance);
+			SmartDashboard.putNumber("Right Encoder Diff", encRight.get()-encLeft.get());
+			SmartDashboard.putNumber("Left Encoder Diff", encLeft.get()-encRight.get());
+			SmartDashboard.putNumber("Right Encoder", encRight.get());
+			SmartDashboard.putNumber("Left Encoder", encLeft.get());
+
+
+			
+			if (encRight.get()-encLeft.get() > 3){
+				roboDrive.tankDrive(-0.55, -0.5);
+			}
+			else if( encLeft.get()-encRight.get() > 3){
+				roboDrive.tankDrive(-0.5, -0.55);
+			}
+			else{
+				roboDrive.tankDrive(-0.5, -0.5);
+			}
+		}
+		roboDrive.tankDrive(0, 0);
+		}
+		
+	
+	public void driveStraight(double distance, double angle){
+		//double calAngle;
+		//double turnSpeed;
 		double distanceTraveled;
 		double straightSpeed;
     	distanceTraveled = calcEncoderDistance();
 		while ((distance-distanceTraveled)>0.1){
-	    	calAngle = calcAngle(angle, ahrs.getAngle());
-	    	distanceTraveled = calcEncoderDistance();
-	    	straightSpeed = proportionalDis(distance,(distance-distanceTraveled));
-	
-	    	if (calAngle<0){
-				turnSpeed = proportional(calAngle);
-				roboDrive.tankDrive((straightSpeed)*-1, ((straightSpeed) + (turnSpeed * 0.2))*-1);
-			}
-			else{
-				turnSpeed = proportional(calAngle);
-				roboDrive.tankDrive((straightSpeed) + ((turnSpeed * 0.2))*-1, (straightSpeed)*-1);
-			}
+//	    	calAngle = calcAngle(angle, ahrs.getAngle());
+//	    	distanceTraveled = calcEncoderDistance();
+//	    	straightSpeed = proportionalDis(distance,(distance-distanceTraveled));
+//	
+//	    	if (calAngle<0){
+//				turnSpeed = proportional(calAngle);
+//				roboDrive.tankDrive((straightSpeed)*-1, ((straightSpeed) + (turnSpeed * 0.2))*-1);
+//			}
+//			else{
+//				turnSpeed = proportional(calAngle);
+//				roboDrive.tankDrive((straightSpeed) + ((turnSpeed * 0.2))*-1, (straightSpeed)*-1);
+//			}
+			
+			
+	//    	roboDrive.tankDrive((straightSpeed)*-1, (straightSpeed)*-1);
+	    	
+	    	if (distanceTraveled < (distance +0.2) || distanceTraveled > (distance - 0.2)) {
+	    		roboDrive.tankDrive(0, 0);
+	    	}
+	    	
+	    	
 		}		
 	}
+	
+	private double calculateXAxis(){
+		double yAxis;
+        if (driveyStick.getX() < -0.1){
+        	yAxis = (0.6*Math.pow((Math.abs(driveyStick.getX())),expFactor)+stall)*negOne;
+        }
+        else if (driveyStick.getX() > 0.1){
+        	yAxis = (0.6*Math.pow((Math.abs(driveyStick.getX())),expFactor)+stall);
+        }
+        else{
+        	yAxis = 0.0;
+        }
+        
+        return yAxis;
+
+
+	}
+	
 	
 	private double calculateYAxis(){
 		double yAxis;
@@ -259,11 +344,13 @@ public class DriveClass {
 	}
 	
 	public void lowGear(){
-		driveSpeed.set(DoubleSolenoid.Value.kForward);
+		driveSpeed.set(DoubleSolenoid.Value.kReverse);
+		
 	}
 	
 	public void highGear(){
-		driveSpeed.set(DoubleSolenoid.Value.kReverse);
+		driveSpeed.set(DoubleSolenoid.Value.kForward);
+
 	}
 	
 	public void passivePosition(){
@@ -273,6 +360,46 @@ public class DriveClass {
 	public void drive(double speedLeft, double speedRight){
 		roboDrive.tankDrive(speedLeft,speedRight);
 		
+	}
+	
+	
+	private double calculateXAxisJoy(){
+		double yAxis;
+        if (driveyStick.getX() < -0.1){
+        	yAxis = (0.6*Math.pow((Math.abs(driveyStick.getX())),expFactor)+stall)*negOne;
+        }
+        else if (driveyStick.getX() > 0.1){
+        	yAxis = (0.6*Math.pow((Math.abs(driveyStick.getX())),expFactor)+stall);
+        }
+        else{
+        	yAxis = 0.0;
+        }
+        
+        return yAxis;
+
+
+	}
+	
+	
+	private double calculateYAxisJoy(){
+		double yAxis;
+        if (driveyStick.getY() < -0.1){
+        	yAxis = (0.6*Math.pow((Math.abs(driveyStick.getY())),expFactor)+stall)*negOne;
+        }
+        else if (driveyStick.getY() > 0.1){
+        	yAxis = (0.6*Math.pow((Math.abs(driveyStick.getY())),expFactor)+stall);
+        }
+        else{
+        	yAxis = 0.0;
+        }
+        
+        return yAxis;
+
+
+	}
+	
+	public void arcadeDriveSingle(){
+		roboDrive.arcadeDrive(calculateYAxisJoy(),calculateXAxisJoy());
 	}
 }
 

@@ -22,6 +22,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 
+/*
+ * Made some changes to code in a different branch in case we messed anything up!
+ */
 
 public class Robot extends SampleRobot {
 	AHRS ahrs;
@@ -121,9 +124,12 @@ public class Robot extends SampleRobot {
     	String defenseSelected = (String) defenseSender.getSelected();
     	String positionSelected = (String) positionSender.getSelected();
     	
+        SmartDashboard.putNumber("Left Encoder:", leftEnc.getDistance());
+        SmartDashboard.putNumber("Right Encoder", rightEnc.getDistance());
+    	
     	//The Autonomous to Run if Low Bar is Selected
     	if (defenseSelected == "Low Bar"){
-    		drive.driveStraight(1, ahrs.getAngle());
+    		drive.drivey(3);
     		//auto.lowGoal();
 
     	}
@@ -222,6 +228,8 @@ public class Robot extends SampleRobot {
      */
     public void operatorControl() {
     	//SAFETY
+    	leftEnc.reset();
+    	rightEnc.reset();
         drive.roboDrive.setSafetyEnabled(true);
         boolean tankMode = true;
         
@@ -255,8 +263,14 @@ public class Robot extends SampleRobot {
 //          //  SmartDashboard.putNumber("Middle Right Motor", drive.middleRightMotor.getOutputCurrent());
 //            SmartDashboard.putNumber("Rear Right Motor", drive.rearRightMotor.getOutputCurrent());
             
-            SmartDashboard.putNumber("Left Encoder:", leftEnc.getDistance());
-            SmartDashboard.putNumber("Right Encoder", rightEnc.getDistance());
+            SmartDashboard.putNumber("Left Encoder:", leftEnc.get());
+            SmartDashboard.putNumber("Right Encoder:", rightEnc.get());
+            
+            SmartDashboard.putNumber("Both Encoders:", (leftEnc.get()-rightEnc.get()));
+            
+            SmartDashboard.putNumber("Left Encoder Dis:", leftEnc.getDistance());
+            SmartDashboard.putNumber("Right Encoder Dis:", rightEnc.getDistance());
+            
             //here in my garage
             if(ballPickup.armUp){
             	SmartDashboard.putString("Intake Arms:","Up" );
