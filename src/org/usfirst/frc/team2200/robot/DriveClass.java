@@ -83,23 +83,25 @@ public class DriveClass {
 		double calAngle;
 		double startAngle = ahrs.getAngle();
 		SmartDashboard.putNumber("Start Angle:", startAngle);
+		SmartDashboard.putString("Loop Running?", "Nah");
 		while (true){
 			calAngle = calcAngle(startAngle, ahrs.getAngle());
 			SmartDashboard.putNumber("Calculated Angle:", calAngle);
-			
+			SmartDashboard.putString("Loop Running?", "Yee");
 			if (calAngle<0){
 				turnSpeed = proportional(calAngle);
 				SmartDashboard.putNumber("Turn Speed:", turnSpeed);
 				SmartDashboard.putNumber("Left Motor:", -0.5);
-				SmartDashboard.putNumber("Right Motor:", (-0.5+(turnSpeed*0.2)));
+				SmartDashboard.putNumber("Right Motor:", ((0.5+(turnSpeed*0.2)))*-1);
 				roboDrive.tankDrive((0.5)*-1, ((0.5) + (turnSpeed * 0.2))*-1);
+				
 			}
 			else{
 				turnSpeed = proportional(calAngle);
 				SmartDashboard.putNumber("Turn Speed:", turnSpeed);
 				SmartDashboard.putNumber("Right Motor:", -0.5);
-				SmartDashboard.putNumber("Left Motor:", (-0.5+(turnSpeed*0.2)));
-				roboDrive.tankDrive((0.5) + ((turnSpeed * 0.2))*-1, (0.5)*-1);
+				SmartDashboard.putNumber("Left Motor:", ((0.5+(turnSpeed*0.2)))*-1);
+				roboDrive.tankDrive(((0.5) + (turnSpeed * 0.2))*-1, (0.5)*-1);
 			}
 		}
 		

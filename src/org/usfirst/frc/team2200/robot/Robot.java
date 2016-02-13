@@ -35,6 +35,7 @@ public class Robot extends SampleRobot {
 	TelescopingArmClass teleArm;
     Joystick moveyController;
     Joystick shootyStick;
+    Joystick moveyStick;
     int session;
     Image frame;
     SendableChooser positionSender;
@@ -63,12 +64,13 @@ public class Robot extends SampleRobot {
     	//**Check Driver Station for USB Joystick Slots**
         moveyController = new Joystick(0);
         shootyStick = new Joystick(1);
+        moveyStick = new Joystick(2);
         
         leftEnc = new Encoder(pins.leftEncPinA,pins.leftEncPinB,true,EncodingType.k1X);
         rightEnc = new Encoder(pins.rightEncPinA,pins.rightEncPinB,true,EncodingType.k1X);
         
         //Declaring The Constructers of Other Classes
-        drive = new DriveClass(moveyController,ahrs,leftEnc,rightEnc);
+        drive = new DriveClass(moveyController,moveyStick,ahrs,leftEnc,rightEnc);
         ballPickup = new BallPickupClass();
         auto = new AutoClass(drive,ballPickup);
         teleArm = new TelescopingArmClass();
@@ -129,7 +131,9 @@ public class Robot extends SampleRobot {
     	
     	//The Autonomous to Run if Low Bar is Selected
     	if (defenseSelected == "Low Bar"){
-    		drive.drivey(3);
+    		//drive.roboDrive.tankDrive(-0.4, -0.4);
+    		drive.driveStraightCompass();
+    		//drive.drivey(3);
     		//auto.lowGoal();
 
     	}
