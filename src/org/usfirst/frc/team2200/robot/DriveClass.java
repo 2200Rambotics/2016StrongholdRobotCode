@@ -19,6 +19,7 @@ public class DriveClass {
 	public double leftAngle = 0.0;
 	public double rightAngle = 0.0;
 	Joystick driveyStick;
+	Joystick driveyStick2;
 	CANTalon frontLeftMotor;
 	CANTalon middleLeftMotor;
 	CANTalon rearLeftMotor;
@@ -39,6 +40,7 @@ public class DriveClass {
 	public DriveClass(Joystick stickZero,Joystick stickTwo,AHRS ahrs, Encoder encLeft, Encoder encRight){
 		this.ahrs = ahrs;
 		this.driveyStick = stickZero;
+		this.driveyStick2 = stickTwo;
 		this.encLeft = encLeft;
 		this.encRight = encRight;
 		pins =  new PinsClass();
@@ -365,11 +367,11 @@ public class DriveClass {
 	
 	private double calculateXAxisJoy(){
 		double yAxis;
-        if (driveyStick.getX() < -0.1){
-        	yAxis = (0.6*Math.pow((Math.abs(driveyStick.getX())),expFactor)+stall)*negOne;
+        if (driveyStick2.getX() < -0.1){
+        	yAxis = (0.6*Math.pow((Math.abs(driveyStick2.getX())),expFactor)+stall)*negOne;
         }
-        else if (driveyStick.getX() > 0.1){
-        	yAxis = (0.6*Math.pow((Math.abs(driveyStick.getX())),expFactor)+stall);
+        else if (driveyStick2.getX() > 0.1){
+        	yAxis = (0.6*Math.pow((Math.abs(driveyStick2.getX())),expFactor)+stall);
         }
         else{
         	yAxis = 0.0;
@@ -383,11 +385,11 @@ public class DriveClass {
 	
 	private double calculateYAxisJoy(){
 		double yAxis;
-        if (driveyStick.getY() < -0.1){
-        	yAxis = (0.6*Math.pow((Math.abs(driveyStick.getY())),expFactor)+stall)*negOne;
+        if (driveyStick2.getY() < -0.1){
+        	yAxis = (0.6*Math.pow((Math.abs(driveyStick2.getY())),expFactor)+stall)*negOne;
         }
-        else if (driveyStick.getY() > 0.1){
-        	yAxis = (0.6*Math.pow((Math.abs(driveyStick.getY())),expFactor)+stall);
+        else if (driveyStick2.getY() > 0.1){
+        	yAxis = (0.6*Math.pow((Math.abs(driveyStick2.getY())),expFactor)+stall);
         }
         else{
         	yAxis = 0.0;
