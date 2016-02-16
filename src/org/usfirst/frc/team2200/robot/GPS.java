@@ -2,6 +2,8 @@ package org.usfirst.frc.team2200.robot;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Ultrasonic;
+
 import com.kauailabs.navx.frc.*;
 
 public class GPS {
@@ -10,17 +12,22 @@ public class GPS {
 	Encoder rightEnc;
 	AHRS ahrs;
 	DriveClass driveclass;
+	AutoClass auto;
 	DigitalInput leftSensor;
 	DigitalInput rightSensor;
+	Ultrasonic ultraLeft;
+	Ultrasonic ultraRight;
 
 	
-	public GPS(Encoder leftEnc, Encoder rightEnc, AHRS ahrsGPS, DigitalInput leftSensor, DigitalInput rightSensor ){
+	public GPS(Encoder leftEnc, Encoder rightEnc, AHRS ahrsGPS, DigitalInput leftSensor, DigitalInput rightSensor, Ultrasonic ultraLeft, Ultrasonic ultraRight ){
 		 
 		this.leftEnc = leftEnc;
 		this.rightEnc = rightEnc;
 		this.ahrs = ahrsGPS;
 		this.leftSensor = leftSensor;
 		this.rightSensor = rightSensor;
+		this.ultraLeft = ultraLeft;
+		this.ultraRight = ultraRight;
 		
 	}
 
@@ -61,12 +68,25 @@ public class GPS {
 			
 		}
 		
-		if (yPosition > 3.0 && yPosition < 4.0 && (Robot.getLeftLineSensor() || Robot.geRightLineSensor())) {
+		else if (yPosition > 3.0 && yPosition < 4.0 && (Robot.getLeftLineSensor() || Robot.geRightLineSensor())) {
 			
 			yPosition = 3.5; //TODO get correct numbers
 			
 		}
 		
+		//change x position with ultra input
+		if (auto.getLeftUltra() < auto.getRightUltra()){
+			
+			xPosition = auto.getLeftUltra();
+		
+		}
+		
+		else  {
+			
+			xPosition = 7.92 - (auto.getRightUltra()); //total field width subtract ultra reading
+			
+		}
+	
 	}
 		
 	double getXPosition(){

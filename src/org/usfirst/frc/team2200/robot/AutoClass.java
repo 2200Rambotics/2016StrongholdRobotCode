@@ -1,8 +1,7 @@
 package org.usfirst.frc.team2200.robot;
 
 import edu.wpi.first.wpilibj.Timer;
-
-
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
@@ -16,8 +15,8 @@ public class AutoClass {
 	public static DigitalInput leftSensor;
 	public static DigitalInput rightSensor;
 	PinsClass pins;
-	DigitalInput ultraInput;
-	DigitalOutput ultraOutput;
+	Ultrasonic ultraLeft;
+	Ultrasonic ultraRight;
 
 	public AutoClass(DriveClass drive, BallPickupClass ballPickup){
 		this.drive = drive;
@@ -25,8 +24,9 @@ public class AutoClass {
 		pins = new PinsClass();
 		leftSensor = new DigitalInput(pins.leftLineSensor);
 		rightSensor = new DigitalInput(pins.rightLineSensor);
-		ultraInput = new DigitalInput(8);
-		ultraOutput = new DigitalOutput(9);
+		ultraLeft = new Ultrasonic(pins.ultraLeftInput, pins.ultraLeftOutput);
+		ultraRight = new Ultrasonic(pins.ultraRightInput, pins.ultraRightOutput);
+
 	}
 	
 	//Low Goal Autonomous
@@ -85,7 +85,8 @@ public class AutoClass {
 		drive.driveStraight(1.3,90-drive.forwardAngle);
 		drive.driveAngle(0-drive.forwardAngle);	
 		drive.driveStraight(2.3, 0-drive.forwardAngle); //TODO calculate distance
-        drive.driveAngle(60-drive.forwardAngle); //TODO calculate angle
+        drive.driveAngle(60-drive.forwardAngle); //
+
         ballPickup.autoUp();
         drive.driveStraight(1.2, 60-drive.forwardAngle); //TODO calculate distance
         ballPickup.autoShoot();		
@@ -207,34 +208,31 @@ public class AutoClass {
         ballPickup.autoShoot();		
 	}
 	
-	public void testUltra() {
+	public double getLeftUltra() {
 		
-		boolean inputFound = false;
-		double previousTime = Timer.getFPGATimestamp();
-		ultraInput.requestInterrupts();
-		ultraInput.setUpSourceEdge(true, false);
-		double ultraTime = 0.0;
-		double timeRead = 0.0;
-		ultraOutput.set(true);
-		Timer.delay(0.01);
-		ultraOutput.set(false);
+		ultraLeft.setAutomaticMode(true);
 		
-		//while (!inputFound) {
-			
-			timeRead = ultraInput.readRisingTimestamp();
-			
-			if (timeRead > 0.0) {
+		double range = ultraLeft.getRangeMM();
+		range = range /1000;
+		
+		SmartDashboard.putNumber("ultra range", range);
+		
+		return range;
 				
-				inputFound = true;
-			}
-			
-		//}
 		
-		ultraTime = timeRead - previousTime;
+	}
+	
+	public double getRightUltra() {
 		
-		SmartDashboard.putNumber("Ultra time", ultraTime);
-		SmartDashboard.putNumber("Time read", timeRead);
-		SmartDashboard.putNumber("Previous time", previousTime);
+		ultraRight.setAutomaticMode(true);
+		
+		double range = ultraRight.getRangeMM();
+		range = range /1000;
+		
+		SmartDashboard.putNumber("ultra range (metres)", range);
+		
+		return range;
+				
 		
 	}
 }

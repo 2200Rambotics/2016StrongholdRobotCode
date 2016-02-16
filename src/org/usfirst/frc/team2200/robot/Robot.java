@@ -43,7 +43,8 @@ public class Robot extends SampleRobot {
     Solenoid variableSpeed;
     Encoder leftEnc;
     Encoder rightEnc;
-
+    DigitalInput limitSwitchTeleArm;
+    DigitalInput teleArmInfrared;
 
     
 
@@ -68,6 +69,10 @@ public class Robot extends SampleRobot {
         
         leftEnc = new Encoder(pins.leftEncPinA,pins.leftEncPinB,true,EncodingType.k1X);
         rightEnc = new Encoder(pins.rightEncPinA,pins.rightEncPinB,true,EncodingType.k1X);
+        // Telearm sensors
+        limitSwitchTeleArm = new DigitalInput(pins.limitSwitchTeleArm);
+        teleArmInfrared = new DigitalInput(pins.teleArmInfrared);
+        
         
         //Declaring The Constructers of Other Classes
         drive = new DriveClass(moveyController,moveyStick,ahrs,leftEnc,rightEnc, this);
@@ -90,6 +95,7 @@ public class Robot extends SampleRobot {
     	catch(Exception e){
     		e.printStackTrace();
     	}
+    	
     	
     	//Create the Choosers For Selecting Auto 
     	//One for Robot Position the Other for Defense Driving Through
@@ -120,7 +126,14 @@ public class Robot extends SampleRobot {
 
     public void autonomous() {
     	//SAFETY
+    	
         drive.roboDrive.setSafetyEnabled(false);
+        /*
+        drive.frontRightMotor.enableBrakeMode(true);
+        drive.frontLeftMotor.enableBrakeMode(true);
+        drive.rearRightMotor.enableBrakeMode(true);
+        drive.rearLeftMotor.enableBrakeMode(true);
+*/
         
         
     	String defenseSelected = (String) defenseSender.getSelected();
@@ -128,11 +141,23 @@ public class Robot extends SampleRobot {
     	
         SmartDashboard.putNumber("Left Encoder:", leftEnc.getDistance());
         SmartDashboard.putNumber("Right Encoder", rightEnc.getDistance());
-    	
+    	SmartDashboard.putNumber("Calc Encoder distance", drive.calcEncoderDistance());
+        
     	//The Autonomous to Run if Low Bar is Selected
     	if (defenseSelected == "Low Bar"){
-    		//drive.roboDrive.tankDrive(-0.5, -0.5);
+    		Timer.delay(3);
+    		ballPickup.autoUp();
+    		ballPickup.autoShoot();
+    		/*
+    		leftEnc.reset();
+    		rightEnc.reset();
     		drive.driveStraightCompass(0.8);
+    		if (drive.calcEncoderDistance() == 575){
+    			drive.roboDrive.tankDrive(0, 0);
+    		
+    		}
+    		*/
+    		
     		//drive.drivey(3);
     		//auto.lowGoal();
 
@@ -222,7 +247,7 @@ public class Robot extends SampleRobot {
     			auto.moatFour();
     			
     		}
-    		
+    	
     	}
 
     }
@@ -236,8 +261,12 @@ public class Robot extends SampleRobot {
     	rightEnc.reset();
         drive.roboDrive.setSafetyEnabled(true);
         double tankMode = 0;
-        
-        
+        /*
+        drive.frontRightMotor.enableBrakeMode(false);
+        drive.frontLeftMotor.enableBrakeMode(false);
+        drive.rearRightMotor.enableBrakeMode(false);
+        drive.rearLeftMotor.enableBrakeMode(false);
+        */
         while (isOperatorControl() && isEnabled()) {
         	try{
         		NIVision.IMAQdxGrab(session, frame, 1);
@@ -258,6 +287,7 @@ public class Robot extends SampleRobot {
             
             SmartDashboard.putBoolean("Left",AutoClass.leftSensor.get());
             SmartDashboard.putBoolean("Right",AutoClass.rightSensor.get());
+            SmartDashboard.putNumber("ultra range", auto.getLeftUltra());
             
 //            SmartDashboard.putNumber("Front Left Motor", drive.frontLeftMotor.getOutputCurrent());
 //           // SmartDashboard.putNumber("Middle Left Motor", drive.middleLeftMotor.getOutputCurrent());
@@ -275,7 +305,8 @@ public class Robot extends SampleRobot {
             SmartDashboard.putNumber("Left Encoder Dis:", leftEnc.getDistance());
             SmartDashboard.putNumber("Right Encoder Dis:", rightEnc.getDistance());
             
-            //here in my garage
+            
+            
             if(ballPickup.armUp){
             	SmartDashboard.putString("Intake Arms:","Down" );
             }
@@ -352,13 +383,21 @@ public class Robot extends SampleRobot {
             
             
             //Extend the Telescoping Arm While Pressing Button 11
-            if(shootyStick.getRawButton(11)){
-            	  teleArm.retract(1);
+            if(shootyStick.getRawButton(11) /*&& teleArmInfrared.get()*/){
+            	  teleArm.extend(1);
             }
-            
+            //if (!teleArmInfrared.get()){
+            	//teleArm.stop();
+            //}
+            }
+            //if (limitSwitchTeleArm.get()==false){ //SWITCH needs to be Normally Closed (NC) wired. 
+            	//teleArm.stop();
+            	//teleArm.locked();
+    //}
+
             //Retract the Telescoping Arm While Pressing Button 10
-            else if(shootyStick.getRawButton(10)){ //DOWN
-            	teleArm.extend(1);
+            /*else*/ if(shootyStick.getRawButton(10) /*&& limitSwitchTeleArm.get() */){ //DOWN
+            	teleArm.retract(1);
             }
             
             else if (shootyStick.getRawButton(9)){//UP
@@ -412,7 +451,8 @@ public class Robot extends SampleRobot {
             
             
             Timer.delay(0.005);		// wait for a motor update time
-        }
+        
+
         try {
 			NIVision.IMAQdxStopAcquisition(session);
 		} catch (Exception e) {
@@ -437,7 +477,7 @@ public class Robot extends SampleRobot {
      */
     public void test() {
     	
-    	auto.testUltra();
+    	auto.getLeftUltra();
 
     }
 }

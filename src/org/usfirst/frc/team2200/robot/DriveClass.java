@@ -76,8 +76,9 @@ public class DriveClass {
 //		wheelRotations = (((encoderLeft / ticksPerRot) + ((encoderRight) / ticksPerRot)) / 2.0)*ratioEncWheel;
 //		length = ((wheelDiameter*Math.PI)*wheelRotations)/15.007;
 //		return length;
-		//1m = 667
-		length = ((encoderLeft/575)+ (encoderRight/575))/2;
+		//1m = 575
+//		length = ((encoderLeft/575)+ (encoderRight/575))/2;
+		length = (encoderLeft + encoderRight) /2;
 		return length;
 		
 	}
@@ -121,6 +122,7 @@ public class DriveClass {
 	
 	public void drivey(double distance){
 		while (calcEncoderDistance() < distance /*&& encLeft.get() < distance*/){
+			
 			
 			SmartDashboard.putNumber("Encoder Distance Travelled", calcEncoderDistance());
 			SmartDashboard.putNumber("Encoder Distance Wanted", distance);

@@ -22,6 +22,13 @@ public class PinsClass {
 	public int leftEncPinB;
 	public int rightEncPinA;
 	public int rightEncPinB;
+	public int ultraLeftInput;
+	public int ultraLeftOutput;
+	public int ultraRightInput;
+	public int ultraRightOutput;
+	public int limitSwitchTeleArm;
+	public int teleArmInfrared;
+
 	
 	
 	public PinsClass(){
@@ -40,6 +47,14 @@ public class PinsClass {
 		 rightEncPinA = 2;
 		 rightEncPinB = 3;
 		 
+		 ultraLeftInput = 6;
+		 ultraLeftOutput = 7;
+		 
+		 ultraRightInput = 8;
+		 ultraRightOutput = 9;
+		 
+		 teleArmInfrared = 10;
+		 limitSwitchTeleArm = 11;
 		 
 		 //CANTalon Addresses
 		 frontLeftMotorPin = 11;

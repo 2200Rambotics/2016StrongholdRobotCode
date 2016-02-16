@@ -36,7 +36,7 @@ public class TelescopingArmClass {
 	
 	public void extend(double speed){
 		if (armUp){
-			teleArm.set(speed);
+			teleArm.set(speed*-1);
 		}
 		else{
 			SmartDashboard.putString("WARNING:", "Deploy Arm Before Attempting to Extend");
@@ -57,7 +57,7 @@ public class TelescopingArmClass {
 	}
 	public void retract(double speed){
 		if (armUp){
-			teleArm.set(speed*-1);
+			teleArm.set(speed);
 		}
 		else{
 			SmartDashboard.putString("WARNING:", "Deploy Arm Before Attempting to Retract");
