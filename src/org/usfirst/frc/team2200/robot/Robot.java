@@ -330,19 +330,19 @@ public class Robot extends SampleRobot {
 
             
             
-            //When the Trigger is Pressed Shoot
+           /* //When the Trigger is Pressed Shoot
             if(shootyStick.getRawButton(1)){
             	ballPickup.shoot(1.0);
             }
-            
+            */
             //When the Joystick Button 2 is Pressed Roll The Intake Rollers to Intake
-            else if(shootyStick.getRawButton(2)){
+            if(shootyStick.getRawButton(2)){
             	ballPickup.intake(1.0);
             }
             
             //When Joystick Button 3 is Pressed Roll the Intake Rollers to Open the Portcullis
             else if(shootyStick.getRawButton(3)){
-            	ballPickup.openDoor(1.0);
+            	ballPickup.outake(1.0);
             }
             else{
             	ballPickup.stop();
