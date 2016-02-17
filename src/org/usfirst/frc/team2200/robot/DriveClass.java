@@ -23,10 +23,10 @@ public class DriveClass {
 	Joystick driveyStick;
 	Joystick driveyStick2;
 	CANTalon frontLeftMotor;
-	CANTalon middleLeftMotor;
+	//CANTalon middleLeftMotor;
 	CANTalon rearLeftMotor;
 	CANTalon frontRightMotor;
-	CANTalon middleRightMotor;
+	//CANTalon middleRightMotor;
 	CANTalon rearRightMotor;
 	AHRS ahrs; 
 	PinsClass pins;
@@ -40,10 +40,9 @@ public class DriveClass {
 	static double stall = 0.4;
 	Robot robotRef;
 
-	public DriveClass(Joystick stickZero,Joystick stickTwo,AHRS ahrs, Encoder encLeft, Encoder encRight, Robot robotRef){
+	public DriveClass(Joystick stickZero,AHRS ahrs, Encoder encLeft, Encoder encRight, Robot robotRef){
 		this.ahrs = ahrs;
 		this.driveyStick = stickZero;
-		this.driveyStick2 = stickTwo;
 		this.encLeft = encLeft;
 		this.encRight = encRight;
 		pins =  new PinsClass();
@@ -396,7 +395,6 @@ public class DriveClass {
 
 
 	}
-	
 	
 	private double calculateYAxisJoy(){
 		double yAxis;

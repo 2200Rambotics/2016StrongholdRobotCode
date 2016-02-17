@@ -35,7 +35,7 @@ public class Robot extends SampleRobot {
 	TelescopingArmClass teleArm;
     Joystick moveyController;
     Joystick shootyStick;
-    Joystick moveyStick;
+    
     int session;
     Image frame;
     SendableChooser positionSender;
@@ -65,7 +65,6 @@ public class Robot extends SampleRobot {
     	//**Check Driver Station for USB Joystick Slots**
         moveyController = new Joystick(0);
         shootyStick = new Joystick(1);
-        moveyStick = new Joystick(2);
         
         leftEnc = new Encoder(pins.leftEncPinA,pins.leftEncPinB,true,EncodingType.k1X);
         rightEnc = new Encoder(pins.rightEncPinA,pins.rightEncPinB,true,EncodingType.k1X);
@@ -75,7 +74,7 @@ public class Robot extends SampleRobot {
         
         
         //Declaring The Constructers of Other Classes
-        drive = new DriveClass(moveyController,moveyStick,ahrs,leftEnc,rightEnc, this);
+        drive = new DriveClass(moveyController,ahrs,leftEnc,rightEnc, this);
         ballPickup = new BallPickupClass();
         auto = new AutoClass(drive,ballPickup);
         teleArm = new TelescopingArmClass();
@@ -289,13 +288,13 @@ public class Robot extends SampleRobot {
             SmartDashboard.putBoolean("Right",AutoClass.rightSensor.get());
             SmartDashboard.putNumber("ultra range", auto.getLeftUltra());
             
-//            SmartDashboard.putNumber("Front Left Motor", drive.frontLeftMotor.getOutputCurrent());
+            SmartDashboard.putNumber("Front Left Motor", drive.frontLeftMotor.getOutputCurrent());
 //           // SmartDashboard.putNumber("Middle Left Motor", drive.middleLeftMotor.getOutputCurrent());
-//            SmartDashboard.putNumber("Rear Left Motor", drive.rearLeftMotor.getOutputCurrent());
+            SmartDashboard.putNumber("Rear Left Motor", drive.rearLeftMotor.getOutputCurrent());
 //            
-//            SmartDashboard.putNumber("Front Right Motor", drive.frontRightMotor.getOutputCurrent());
+            SmartDashboard.putNumber("Front Right Motor", drive.frontRightMotor.getOutputCurrent());
 //          //  SmartDashboard.putNumber("Middle Right Motor", drive.middleRightMotor.getOutputCurrent());
-//            SmartDashboard.putNumber("Rear Right Motor", drive.rearRightMotor.getOutputCurrent());
+            SmartDashboard.putNumber("Rear Right Motor", drive.rearRightMotor.getOutputCurrent());
             
             SmartDashboard.putNumber("Left Encoder:", leftEnc.get());
             SmartDashboard.putNumber("Right Encoder:", rightEnc.get());
@@ -383,20 +382,20 @@ public class Robot extends SampleRobot {
             
             
             //Extend the Telescoping Arm While Pressing Button 11
-            if(shootyStick.getRawButton(11) /*&& teleArmInfrared.get()*/){
+            if(shootyStick.getRawButton(11) && teleArmInfrared.get()){
             	  teleArm.extend(1);
             }
-            //if (!teleArmInfrared.get()){
-            	//teleArm.stop();
-            //}
+            if (!teleArmInfrared.get()){
+            	teleArm.stop();
             }
-            //if (limitSwitchTeleArm.get()==false){ //SWITCH needs to be Normally Closed (NC) wired. 
-            	//teleArm.stop();
-            	//teleArm.locked();
-    //}
+            }
+            if (limitSwitchTeleArm.get()==false){ //SWITCH needs to be Normally Closed (NC) wired. 
+            	teleArm.stop();
+            	teleArm.locked();
+    }
 
             //Retract the Telescoping Arm While Pressing Button 10
-            /*else*/ if(shootyStick.getRawButton(10) /*&& limitSwitchTeleArm.get() */){ //DOWN
+            else if(shootyStick.getRawButton(10) && limitSwitchTeleArm.get()){ //DOWN
             	teleArm.retract(1);
             }
             
@@ -410,13 +409,17 @@ public class Robot extends SampleRobot {
             }
             
             //Change the Gear to Low Gear by Clicking Button 7
-            if(moveyController.getRawButton(7) || moveyStick.getRawButton(2)){
+            if(moveyController.getRawButton(7)){
+            	SmartDashboard.putString("Button:","7");
             	drive.lowGear();
+            	
             }
             
             //Change the Gear to High Gear by Clicking Button 8
-            else if(moveyController.getRawButton(8) || moveyStick.getRawButton(3)){
+            else if(moveyController.getRawButton(8)){// moveyStick.getRawButton(3)){
             	drive.highGear();
+            	SmartDashboard.putString("Button:","8");
+
             }
             
             //If Neither Button is Being Pressed Set A and B to Zero
@@ -426,6 +429,7 @@ public class Robot extends SampleRobot {
 
 
             if(moveyController.getRawButton(1)){
+            	SmartDashboard.putString("Button:","1");
             	if(tankMode == 0){
             		tankMode = 1;
             		Timer.delay(0.5);
