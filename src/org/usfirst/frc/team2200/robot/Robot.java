@@ -61,6 +61,7 @@ public class Robot extends SampleRobot {
         //Two Line Sensors on DIO Slots 0 and 2
 
     	
+        
     	//Logitec Controller Used for Driving on Slot 0 Joystick Used for Functional Mech on Slot 1 
     	//**Check Driver Station for USB Joystick Slots**
         moveyController = new Joystick(0);
