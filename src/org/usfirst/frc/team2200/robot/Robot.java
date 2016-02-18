@@ -290,24 +290,16 @@ public class Robot extends SampleRobot {
             
             SmartDashboard.putBoolean("Left",AutoClass.leftSensor.get());
             SmartDashboard.putBoolean("Right",AutoClass.rightSensor.get());
-            SmartDashboard.putNumber("ultra range", auto.getLeftUltra());
+            SmartDashboard.putNumber("Ultrasonic Range:", auto.getLeftUltra());
             
             SmartDashboard.putNumber("Front Left Motor", drive.frontLeftMotor.getOutputCurrent());
-//           // SmartDashboard.putNumber("Middle Left Motor", drive.middleLeftMotor.getOutputCurrent());
             SmartDashboard.putNumber("Rear Left Motor", drive.rearLeftMotor.getOutputCurrent());
 //            
             SmartDashboard.putNumber("Front Right Motor", drive.frontRightMotor.getOutputCurrent());
-//          //  SmartDashboard.putNumber("Middle Right Motor", drive.middleRightMotor.getOutputCurrent());
             SmartDashboard.putNumber("Rear Right Motor", drive.rearRightMotor.getOutputCurrent());
             
             SmartDashboard.putNumber("Left Encoder:", leftEnc.get());
             SmartDashboard.putNumber("Right Encoder:", rightEnc.get());
-            
-            SmartDashboard.putNumber("Both Encoders:", (leftEnc.get()-rightEnc.get()));
-            
-            SmartDashboard.putNumber("Left Encoder Dis:", leftEnc.getDistance());
-            SmartDashboard.putNumber("Right Encoder Dis:", rightEnc.getDistance());
-            
             
             
             if(ballPickup.armUp){
@@ -325,94 +317,10 @@ public class Robot extends SampleRobot {
             }
             
             SmartDashboard.putNumber("Angle:", ahrs.getAngle());
-            SmartDashboard.putNumber("X:", ahrs.getDisplacementX());
-            double length = drive.calcEncoderDistance();
-            SmartDashboard.putNumber("Meters Travelled", length);
+            double length = drive.calcEncoderM();
+            SmartDashboard.putNumber("Meters Travelled:", length);
 
 
-
-            
-            
-           /* //When the Trigger is Pressed Shoot
-            if(shootyStick.getRawButton(1)){
-            	ballPickup.shoot(1.0);
-            }
-            */
-            /*  //Joystick Controlls
-            //When the Joystick Button 2 is Pressed Roll The Intake Rollers to Intake
-            if(shootyStick.getRawButton(2)){
-            	ballPickup.intake(1.0);
-            }
-            
-            //When Joystick Button 3 is Pressed Roll the Intake Rollers to Open the Portcullis
-            else if(shootyStick.getRawButton(3)){
-            	ballPickup.outake(1.0);
-            }
-            else{
-            	ballPickup.stop();
-            }
-            //When Pulling Back on The Joystick Raise the Intake Arms 
-            if(shootyStick.getY() < -0.9){
-            	ballPickup.upPosition();
-            }
-            
-            //When Pushing Forward on The Joystick Lower the Intake Arms 
-            else if(shootyStick.getY() > 0.9){
-            	ballPickup.downPosition();
-            }
-            
-            //When not Pushing or Pulling on the Joystick Stop Moving the Arms
-            else if(shootyStick.getY() > -0.9 || shootyStick.getY() < 0.9){
-            	ballPickup.passivePosition();
-            }
-
-            
-            //While Button 6 is Being Pressed Unlock and Move Up the Arm
-            if(shootyStick.getRawButton(6)){
-            	//unlock and up
-            	
-            	teleArm.locked();
-            }
-            
-            //While Button 7 is Being Pressed Lock the Arm
-            else if(shootyStick.getRawButton(7)&& shootyStick.getRawButton(8)){
-            	//lock
-            	teleArm.unlockedAndUp();
-            }
-            
-            //If Neither Button is Selected Stop the Arm
-            else{
-            	teleArm.passivePosition();
-            }
-            
-            
-            //Extend the Telescoping Arm While Pressing Button 11
-            if(shootyStick.getRawButton(11) && teleArmInfrared.get()){
-            	  teleArm.extend(1);
-            }
-            if (!teleArmInfrared.get()){
-            	teleArm.stop();
-            }
-            }
-            if (limitSwitchTeleArm.get()==false){ //SWITCH needs to be Normally Closed (NC) wired. 
-            	teleArm.stop();
-            	teleArm.locked();
-    }
-
-            //Retract the Telescoping Arm While Pressing Button 10
-            else if(shootyStick.getRawButton(10) && limitSwitchTeleArm.get()){ //DOWN
-            	teleArm.retract(1);
-            }
-            
-            else if (shootyStick.getRawButton(9)){//UP
-            	teleArm.retract(0.2);
-            }
-            
-            //If Neither Button is Being Pressed Stop the Arm
-            else{
-            	teleArm.stop();
-            }
-            */
             
 
             

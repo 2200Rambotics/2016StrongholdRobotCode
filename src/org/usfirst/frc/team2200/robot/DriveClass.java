@@ -166,37 +166,6 @@ public class DriveClass {
 		}
 		
 	
-	public void driveStraight(double distance, double angle){
-		//double calAngle;
-		//double turnSpeed;
-		double distanceTraveled;
-		double straightSpeed;
-    	distanceTraveled = calcEncoderDistance();
-		while ((distance-distanceTraveled)>0.1){
-//	    	calAngle = calcAngle(angle, ahrs.getAngle());
-//	    	distanceTraveled = calcEncoderDistance();
-//	    	straightSpeed = proportionalDis(distance,(distance-distanceTraveled));
-//	
-//	    	if (calAngle<0){
-//				turnSpeed = proportional(calAngle);
-//				roboDrive.tankDrive((straightSpeed)*-1, ((straightSpeed) + (turnSpeed * 0.2))*-1);
-//			}
-//			else{
-//				turnSpeed = proportional(calAngle);
-//				roboDrive.tankDrive((straightSpeed) + ((turnSpeed * 0.2))*-1, (straightSpeed)*-1);
-//			}
-			
-			
-	//    	roboDrive.tankDrive((straightSpeed)*-1, (straightSpeed)*-1);
-	    	
-	    	if (distanceTraveled < (distance +0.2) || distanceTraveled > (distance - 0.2)) {
-	    		roboDrive.tankDrive(0, 0);
-	    	}
-	    	
-	    	
-		}		
-	}
-	
 	private double calculateXAxis(){
 		double yAxis;
         if (driveyStick.getX() < -0.1){

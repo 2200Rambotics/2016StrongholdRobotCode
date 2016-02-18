@@ -114,7 +114,7 @@ public class GPS {
 		d = Math.pow(x-xPosition, 2) + Math.pow(y-yPosition, 2);
 		d = Math.pow(d, 0.5);
 		
-		driveclass.driveStraight(d, targetDirection+forwardAngle);
+		driveclass.driveStraightCompass(d, targetDirection+forwardAngle);
 
 		
 	}
