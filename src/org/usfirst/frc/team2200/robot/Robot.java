@@ -34,6 +34,7 @@ public class Robot extends SampleRobot {
 	BallPickupClass ballPickup;
 	TelescopingArmClass teleArm;
     Joystick moveyController;
+    Joystick stick;
     Joystick shootyStick;
     
     int session;
@@ -43,9 +44,10 @@ public class Robot extends SampleRobot {
     Solenoid variableSpeed;
     Encoder leftEnc;
     Encoder rightEnc;
+    /*
     DigitalInput limitSwitchTeleArm;
     DigitalInput teleArmInfrared;
-
+*/
     
 
     public Robot() {
@@ -70,12 +72,12 @@ public class Robot extends SampleRobot {
         leftEnc = new Encoder(pins.leftEncPinA,pins.leftEncPinB,true,EncodingType.k1X);
         rightEnc = new Encoder(pins.rightEncPinA,pins.rightEncPinB,true,EncodingType.k1X);
         // Telearm sensors
-        limitSwitchTeleArm = new DigitalInput(pins.limitSwitchTeleArm);
-        teleArmInfrared = new DigitalInput(pins.teleArmInfrared);
+        //limitSwitchTeleArm = new DigitalInput(pins.limitSwitchTeleArm);
+        //teleArmInfrared = new DigitalInput(pins.teleArmInfrared);
         
         
         //Declaring The Constructers of Other Classes
-        drive = new DriveClass(moveyController,ahrs,leftEnc,rightEnc, this);
+        drive = new DriveClass(moveyController,ahrs,leftEnc,rightEnc, this, stick);
         ballPickup = new BallPickupClass();
         auto = new AutoClass(drive,ballPickup);
         teleArm = new TelescopingArmClass();
@@ -85,7 +87,7 @@ public class Robot extends SampleRobot {
    
     }
     
-    public void robotInit() {
+    public void robotInit() { 
 
           // the camera name (ex "cam0") can be found through the roborio web interface
     	try{
@@ -128,26 +130,27 @@ public class Robot extends SampleRobot {
     	//SAFETY
     	
         drive.roboDrive.setSafetyEnabled(false);
-        /*
+        
         drive.frontRightMotor.enableBrakeMode(true);
         drive.frontLeftMotor.enableBrakeMode(true);
         drive.rearRightMotor.enableBrakeMode(true);
         drive.rearLeftMotor.enableBrakeMode(true);
-*/
+
         
         
     	String defenseSelected = (String) defenseSender.getSelected();
     	String positionSelected = (String) positionSender.getSelected();
     	
         SmartDashboard.putNumber("Left Encoder:", leftEnc.getDistance());
-        SmartDashboard.putNumber("Right Encoder", rightEnc.getDistance());
+        SmartDashboard.putNumber("Right Encoder:", rightEnc.getDistance());
     	SmartDashboard.putNumber("Calc Encoder distance", drive.calcEncoderDistance());
         
     	//The Autonomous to Run if Low Bar is Selected
     	if (defenseSelected == "Low Bar"){
-    		Timer.delay(3);
-    		ballPickup.autoUp();
-    		ballPickup.autoShoot();
+			SmartDashboard.putNumber("Enc M", drive.calcEncoderM());
+    		drive.driveStraightCompass(0.8, 3);
+			SmartDashboard.putNumber("Enc M", drive.calcEncoderM());
+
     		/*
     		leftEnc.reset();
     		rightEnc.reset();
@@ -261,12 +264,12 @@ public class Robot extends SampleRobot {
     	rightEnc.reset();
         drive.roboDrive.setSafetyEnabled(true);
         double tankMode = 0;
-        /*
+        
         drive.frontRightMotor.enableBrakeMode(false);
         drive.frontLeftMotor.enableBrakeMode(false);
         drive.rearRightMotor.enableBrakeMode(false);
         drive.rearLeftMotor.enableBrakeMode(false);
-        */
+        
         while (isOperatorControl() && isEnabled()) {
         	try{
         		NIVision.IMAQdxGrab(session, frame, 1);
@@ -335,6 +338,7 @@ public class Robot extends SampleRobot {
             	ballPickup.shoot(1.0);
             }
             */
+            /*  //Joystick Controlls
             //When the Joystick Button 2 is Pressed Roll The Intake Rollers to Intake
             if(shootyStick.getRawButton(2)){
             	ballPickup.intake(1.0);
@@ -401,14 +405,96 @@ public class Robot extends SampleRobot {
             }
             
             else if (shootyStick.getRawButton(9)){//UP
-            	teleArm.halfSpeed();
+            	teleArm.retract(0.2);
             }
             
             //If Neither Button is Being Pressed Stop the Arm
             else{
             	teleArm.stop();
             }
+            */
             
+
+            
+            if(shootyStick.getRawButton(2)){
+            	ballPickup.openDoor(1);
+            		
+            }
+            
+            if(shootyStick.getRawButton(4)){
+            	teleArm.locked();
+            }
+            
+            //When Pulling Back on The Joystick Raise the Intake Arms 
+            if(shootyStick.getRawButton(7)){
+            	ballPickup.upPosition();
+            }
+            //When Pushing Forward on The Joystick Lower the Intake Arms 
+            else if(shootyStick.getRawButton(5)){
+            	ballPickup.downPosition();
+            }
+            
+            //When not Pushing or Pulling on the Joystick Stop Moving the Arms
+            else{
+            	ballPickup.passivePosition();
+            }
+            
+            
+            
+            ballPickup.outake(shootyStick.getThrottle());
+            
+            teleArm.extend(shootyStick.getY());
+            
+            //When the Joystick Button 2 is Pressed Roll The Intake Rollers to Intake
+
+            //When Pulling Back on The Joystick Raise the Intake Arms 
+            if(shootyStick.getY() < -0.9){
+            	ballPickup.upPosition();
+            }
+            
+            //When Pushing Forward on The Joystick Lower the Intake Arms 
+            else if(shootyStick.getY() > 0.9){
+            	ballPickup.downPosition();
+            }
+            
+            //When not Pushing or Pulling on the Joystick Stop Moving the Arms
+            else if(shootyStick.getY() > -0.9 || shootyStick.getY() < 0.9){
+            	ballPickup.passivePosition();
+            }
+
+            
+            //While Button 6 is Being Pressed Unlock and Move Up the Arm
+            if(shootyStick.getRawButton(6)){
+            	//unlock and up
+            	
+            	teleArm.locked();
+            }
+            
+            //While Button 7 is Being Pressed Lock the Arm
+            else if(shootyStick.getRawButton(9)&& shootyStick.getRawButton(10)){
+            	//Final Form Scorpion Tail!
+            	teleArm.unlockedAndUp();
+            }
+            
+            //If Neither Button is Selected Stop the Arm
+            else{
+            	teleArm.passivePosition();
+            }
+            
+         /*   
+
+            if (!teleArmInfrared.get()){
+            	teleArm.stop();
+            }
+            }
+            if (limitSwitchTeleArm.get()==false){ //SWITCH needs to be Normally Closed (NC) wired. 
+            	teleArm.stop();
+            	teleArm.locked();
+    }
+
+
+
+            */
             //Change the Gear to Low Gear by Clicking Button 7
             if(moveyController.getRawButton(7)){
             	SmartDashboard.putString("Button:","7");
@@ -417,7 +503,7 @@ public class Robot extends SampleRobot {
             }
             
             //Change the Gear to High Gear by Clicking Button 8
-            else if(moveyController.getRawButton(8)){// moveyStick.getRawButton(3)){
+            else if(moveyController.getRawButton(8)){
             	drive.highGear();
             	SmartDashboard.putString("Button:","8");
 
@@ -428,8 +514,8 @@ public class Robot extends SampleRobot {
             	drive.passivePosition();
             }
 
-
-            if(moveyController.getRawButton(1)){
+            drive.tankDrive();
+         /*   if(moveyController.getRawButton(1)){
             	SmartDashboard.putString("Button:","1");
             	if(tankMode == 0){
             		tankMode = 1;
@@ -451,8 +537,9 @@ public class Robot extends SampleRobot {
         		SmartDashboard.putString("Drive Mode:", "Jana Drive");
         		drive.arcadeDrive();
         	}
+        	*/
+        	SmartDashboard.putNumber("Wheel Rotations:", drive.wheelRotations(leftEnc.get(),rightEnc.get()));
 
-   
             
             
             Timer.delay(0.005);		// wait for a motor update time
@@ -462,8 +549,9 @@ public class Robot extends SampleRobot {
 			NIVision.IMAQdxStopAcquisition(session);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}}
     }
+    
     
     public static boolean getLeftLineSensor() {
     	

@@ -40,9 +40,10 @@ public class DriveClass {
 	static double stall = 0.4;
 	Robot robotRef;
 
-	public DriveClass(Joystick stickZero,AHRS ahrs, Encoder encLeft, Encoder encRight, Robot robotRef){
+	public DriveClass(Joystick stickZero,AHRS ahrs, Encoder encLeft, Encoder encRight, Robot robotRef, Joystick stickOne){
 		this.ahrs = ahrs;
 		this.driveyStick = stickZero;
+		this.driveyStick2 = stickOne;
 		this.encLeft = encLeft;
 		this.encRight = encRight;
 		pins =  new PinsClass();
@@ -64,6 +65,21 @@ public class DriveClass {
     	//middleRightMotor.set(pins.frontRightMotorPin);
 	}
 
+
+	
+	public double wheelRotations(double leftEnc,double rightEnc){
+		double diff = (leftEnc+rightEnc)/2;
+		SmartDashboard.putNumber("diff",diff);
+		double rots =  100.0-((diff- 0.0) * ((0.0- 100.0) / (115000 - 0.0)) + 100.0);
+		SmartDashboard.putNumber("rots",rots);
+
+		return rots;
+	}
+	public double calcEncoderM(){
+		double rots = wheelRotations(encLeft.get(),encRight.get());
+		double dis =  10.0-((rots- 0.0) * ((0.0- 10.0) / (17.2 - 0.0)) + 10.0);
+		return dis;
+	}
 	public double calcEncoderDistance(){
 //		double ticksPerRot = 100.0;
 //		double ratioEncWheel = (66.0/18.0);
@@ -82,14 +98,18 @@ public class DriveClass {
 		
 	}
 	
-	public void driveStraightCompass(double speed){
+	public void driveStraightCompass(double speed,double distance){
 		double turnSpeed;
 		double calAngle;
 		double angleDeadband = 0.0;
 		double startAngle = ahrs.getAngle();
+		double distanceM = calcEncoderM();
 		SmartDashboard.putNumber("Start Angle:", startAngle);
 		SmartDashboard.putString("Loop Running?", "Nah");
-		while (robotRef.isAutonomous() && robotRef.isEnabled()){
+		SmartDashboard.putNumber("Enc M", distanceM);
+		while (distance > distanceM){
+			distanceM = calcEncoderM();
+			SmartDashboard.putNumber("Enc M", distanceM);
 			calAngle = calcAngle(startAngle, ahrs.getAngle());
 			SmartDashboard.putNumber("Calculated Angle:", calAngle);
 			SmartDashboard.putString("Loop Running?", "Yee");
@@ -248,9 +268,10 @@ public class DriveClass {
 		roboDrive.tankDrive((calculateYAxis()), (calculateThrottleAxis()));
 	}
 	
-	//Drive the Robot In Arcade Drive
+	//Drive the Robot In Arcade Drive 
 	public void arcadeDrive(){
-		roboDrive.arcadeDrive((calculateYAxis()),(calculateTwistAxis()));
+//		roboDrive.arcadeDrive((calculateYAxisJoy()),(calculateXAxisJoy()));
+		roboDrive.arcadeDrive(driveyStick);
 	}
 	
 

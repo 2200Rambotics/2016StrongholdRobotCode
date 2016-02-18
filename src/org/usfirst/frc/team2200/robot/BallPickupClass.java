@@ -22,11 +22,13 @@ public class BallPickupClass {
 	}
 	
 	public void downPosition(){
-		intakeArms.set(DoubleSolenoid.Value.kReverse);
+		intakeArms.set(DoubleSolenoid.Value.kForward);
+
 		armUp = false;
 	}
 	public void upPosition(){
-		intakeArms.set(DoubleSolenoid.Value.kForward);
+		intakeArms.set(DoubleSolenoid.Value.kReverse);
+
 		armUp = true;
 	}
 	public void passivePosition(){

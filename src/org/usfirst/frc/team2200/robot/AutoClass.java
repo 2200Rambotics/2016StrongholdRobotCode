@@ -62,10 +62,10 @@ public class AutoClass {
 		drive.resetAngle();
 		lineUp();
 		//drive.driveAngle(90);
-		drive.driveStraight(2.3, 0); //TODO calculate distance
+		drive.driveStraightCompass(0.8, 2.3); //TODO calculate distance
         drive.driveAngle(60); //TODO calculate angle
         ballPickup.autoUp();
-        drive.driveStraight(1.2, 60); //TODO calculate distance
+        drive.driveStraight(0.6, 1.2); //TODO calculate distance
         ballPickup.autoShoot(); 
 	}
 	
