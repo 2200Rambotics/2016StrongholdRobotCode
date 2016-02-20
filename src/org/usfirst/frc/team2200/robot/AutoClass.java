@@ -58,21 +58,23 @@ public class AutoClass {
 	
 	public void lowGoal(){
 		drive.setAngles();
-		drive.driveTime(0.7, 2.5);
+		drive.driveAngle(180);
+		drive.driveTime(-0.7, 2.5);
 		drive.resetAngle();
 		lineUp();
-		//drive.driveAngle(90);
-		drive.driveStraightCompass(0.8, 2.3); //TODO calculate distance
+		drive.driveStraightCompass(0.8, 1.6); //TODO calculate distance
         drive.driveAngle(60); //TODO calculate angle
-        ballPickup.autoUp();
-        drive.driveStraight(0.6, 1.2); //TODO calculate distance
+        drive.driveStraightCompass(0.6, 1.2); //TODO calculate distance
         ballPickup.autoShoot(); 
 	}
 	
 	//Ramparts Autonomous
 	
 	public void rampartsOne(){
+		drive.setAngles();
 		drive.driveTime(0.7, 2.5);
+		drive.resetAngle();
+		lineUp();
 		
 	}
 	
@@ -82,13 +84,13 @@ public class AutoClass {
 		drive.resetAngle();
 		lineUp();
 		drive.driveAngle(90-drive.forwardAngle);
-		drive.driveStraight(1.3,90-drive.forwardAngle);
+		drive.driveStraightCompass(1.3,90-drive.forwardAngle);
 		drive.driveAngle(0-drive.forwardAngle);	
-		drive.driveStraight(2.3, 0-drive.forwardAngle); //TODO calculate distance
+		drive.driveStraightCompass(2.3, 0-drive.forwardAngle); //TODO calculate distance
         drive.driveAngle(60-drive.forwardAngle); //
 
         ballPickup.autoUp();
-        drive.driveStraight(1.2, 60-drive.forwardAngle); //TODO calculate distance
+        drive.driveStraightCompass(1.2, 60-drive.forwardAngle); //TODO calculate distance
         ballPickup.autoShoot();		
 	}
 	
@@ -103,13 +105,15 @@ public class AutoClass {
 		drive.resetAngle();
 		lineUp();
 		drive.driveAngle(90);
+		/*
 		drive.driveStraight(1.3,90);
 		drive.driveAngle(0);	
 		drive.driveStraight(2.3, 0); //TODO calculate distance
         drive.driveAngle(60); //TODO calculate angle
         ballPickup.autoUp();
         drive.driveStraight(1.2, 60); //TODO calculate distance
-        ballPickup.autoShoot(); 		
+        ballPickup.autoShoot(); 	
+        */	
 	}
 	
 	//Moat Autonomous
@@ -135,6 +139,7 @@ public class AutoClass {
 		drive.resetAngle();
 		lineUp();
 		drive.driveAngle(90);
+		/*
 		drive.driveStraight(1.3,90);
 		drive.driveAngle(0);	
 		drive.driveStraight(2.3, 0); //TODO calculate distance
@@ -142,6 +147,7 @@ public class AutoClass {
         ballPickup.autoUp();
         drive.driveStraight(1.2, 60); //TODO calculate distance
         ballPickup.autoShoot();	
+        */
 	}
 	
 	//Rough Terrain Autonomous
@@ -167,6 +173,7 @@ public class AutoClass {
 		drive.resetAngle();
 		lineUp();
 		drive.driveAngle(90);
+		/*
 		drive.driveStraight(1.3,90);
 		drive.driveAngle(0);	
 		drive.driveStraight(2.3, 0); //TODO calculate distance
@@ -174,6 +181,7 @@ public class AutoClass {
         ballPickup.autoUp();
         drive.driveStraight(1.2, 60); //TODO calculate distance
         ballPickup.autoShoot();		
+        */
 	}
 	
 	//Rock Wall Autonomous
@@ -199,6 +207,7 @@ public class AutoClass {
 		drive.resetAngle();
 		lineUp();
 		drive.driveAngle(90);
+		/*
 		drive.driveStraight(1.3,90);
 		drive.driveAngle(0);	
 		drive.driveStraight(2.3, 0); //TODO calculate distance
@@ -206,6 +215,7 @@ public class AutoClass {
         ballPickup.autoUp();
         drive.driveStraight(1.2, 60); //TODO calculate distance
         ballPickup.autoShoot();		
+        */
 	}
 	
 	public double getLeftUltra() {

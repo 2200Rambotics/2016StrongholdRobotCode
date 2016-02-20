@@ -36,8 +36,10 @@ public class DriveClass {
 	public RobotDrive roboDrive;
 	static double negOne = -1.0;
 	static double expFactor = 3.0;
-	static double deadBand = 5.0;
+	static double deadBand = 1.0;
 	static double stall = 0.4;
+	static double rotsPerM = (0.858)*10;
+	static double ticksPerRot = (1100)*100;
 	Robot robotRef;
 
 	public DriveClass(Joystick stickZero,AHRS ahrs, Encoder encLeft, Encoder encRight, Robot robotRef, Joystick stickOne){
@@ -70,14 +72,16 @@ public class DriveClass {
 	public double wheelRotations(double leftEnc,double rightEnc){
 		double diff = (leftEnc+rightEnc)/2;
 		SmartDashboard.putNumber("diff",diff);
-		double rots =  100.0-((diff- 0.0) * ((0.0- 100.0) / (115000 - 0.0)) + 100.0);
+		double rots =  100.0-((diff- 0.0) * ((0.0- 100.0) / (ticksPerRot - 0.0)) + 100.0);
 		SmartDashboard.putNumber("rots",rots);
 
 		return rots;
 	}
 	public double calcEncoderM(){
-		double rots = wheelRotations(encLeft.get(),encRight.get());
-		double dis =  10.0-((rots- 0.0) * ((0.0- 10.0) / (17.2 - 0.0)) + 10.0);
+		double enRight = -1*(encRight.get());
+		double enLeft = encLeft.get();
+		double rots = wheelRotations(enLeft,enRight);
+		double dis =  10.0-((rots- 0.0) * ((0.0- 10.0) / (rotsPerM - 0.0)) + 10.0);
 		return dis;
 	}
 	public double calcEncoderDistance(){
@@ -98,6 +102,13 @@ public class DriveClass {
 		
 	}
 	
+    //Calculate the Proportional Speed
+    private static double proportional(double deltaAngle){
+    	double speed;
+    	speed = (1-0.6)*(abs(deltaAngle)/180)+0.6;
+    	return speed;
+    }
+	
 	public void driveStraightCompass(double speed,double distance){
 		double turnSpeed;
 		double calAngle;
@@ -108,10 +119,12 @@ public class DriveClass {
 		SmartDashboard.putString("Loop Running?", "Nah");
 		SmartDashboard.putNumber("Enc M", distanceM);
 		while (distance > distanceM){
+            SmartDashboard.putNumber("Angle:", ahrs.getAngle());
 			distanceM = calcEncoderM();
 			SmartDashboard.putNumber("Enc M", distanceM);
 			calAngle = calcAngle(startAngle, ahrs.getAngle());
-			SmartDashboard.putNumber("Calculated Angle:", calAngle);
+			SmartDashboard.putNumber("Meters Travelled:", distanceM);
+			SmartDashboard.putNumber("Rotations:", this.wheelRotations(encLeft.get(), (-1*(encRight.get()))));
 			SmartDashboard.putString("Loop Running?", "Yee");
 			if (calAngle<0){
 				turnSpeed = proportional(calAngle);
@@ -135,36 +148,12 @@ public class DriveClass {
 				roboDrive.tankDrive(((speed) + (turnSpeed * 0.3))*-1, (speed)*-1);
 			}
 		}
+		SmartDashboard.putString("Loop Running?", "Nah");
 		roboDrive.tankDrive(0, 0);
 	}
 	
 	
-	public void drivey(double distance){
-		while (calcEncoderDistance() < distance /*&& encLeft.get() < distance*/){
-			
-			
-			SmartDashboard.putNumber("Encoder Distance Travelled", calcEncoderDistance());
-			SmartDashboard.putNumber("Encoder Distance Wanted", distance);
-			SmartDashboard.putNumber("Right Encoder Diff", encRight.get()-encLeft.get());
-			SmartDashboard.putNumber("Left Encoder Diff", encLeft.get()-encRight.get());
-			SmartDashboard.putNumber("Right Encoder", encRight.get());
-			SmartDashboard.putNumber("Left Encoder", encLeft.get());
 
-
-			
-			if (encRight.get()-encLeft.get() > 3){
-				roboDrive.tankDrive(-0.55, -0.5);
-			}
-			else if( encLeft.get()-encRight.get() > 3){
-				roboDrive.tankDrive(-0.5, -0.55);
-			}
-			else{
-				roboDrive.tankDrive(-0.5, -0.5);
-			}
-		}
-		roboDrive.tankDrive(0, 0);
-		}
-		
 	
 	private double calculateXAxis(){
 		double yAxis;
@@ -234,7 +223,7 @@ public class DriveClass {
 	
 	//Drive the Robot In Tank Drive
 	public void tankDrive(){
-		roboDrive.tankDrive((calculateYAxis()), (calculateThrottleAxis()));
+		roboDrive.tankDrive((calculateYAxis()), (calculateThrottleAxis() * -1));
 	}
 	
 	//Drive the Robot In Arcade Drive 
@@ -247,7 +236,7 @@ public class DriveClass {
 	
 	//Drive Forward For A Certain Amount of Time
 	public void driveTime(double speed, double time){
-		roboDrive.drive(speed, 0);
+		roboDrive.drive(-1*speed, 0);
 		Timer.delay(time);
 		roboDrive.drive(0, 0);
 	}
@@ -277,24 +266,16 @@ public class DriveClass {
     	}
     }
     
-    private static double proportionalDis(double distanceWant,double distanceDelta){
-    	double speed;
-    	speed = (1-stall)*(distanceDelta/distanceWant)+stall;
-    	return speed;
-    }
+
     
-    //Calculate the Proportional Speed
-    private static double proportional(double deltaAngle){
-    	double speed;
-    	speed = (1-stall)*(abs(deltaAngle)/180)+stall;
-    	return speed;
-    }
+
 	
     //Drive To A Certain Angle
 	public void driveAngle(double targetAngle){
         double angle;
         double speed;
         while(abs(calcAngle(targetAngle, ahrs.getAngle())) > deadBand){
+            SmartDashboard.putNumber("Angle:", ahrs.getAngle());
         	angle = calcAngle(targetAngle, ahrs.getAngle());
         	if (angle<0){
         		speed = proportional(angle);
@@ -314,6 +295,8 @@ public class DriveClass {
 	public void setAngles(){
 		
 		forwardAngle = ahrs.getAngle();
+		
+		
 		backwardAngle = forwardAngle+180;
 		if (backwardAngle >= 360 ){
 			backwardAngle = backwardAngle-360;
@@ -335,6 +318,8 @@ public class DriveClass {
         double angle;
         double speed;
         while(abs(calcAngle(forwardAngle, ahrs.getAngle())) > deadBand){
+            SmartDashboard.putNumber("Angle:", ahrs.getAngle());
+
         	angle = calcAngle(forwardAngle, ahrs.getAngle());
         	if (angle<0){
         		speed = proportional(angle);
@@ -350,12 +335,14 @@ public class DriveClass {
 	}
 	
 	public void lowGear(){
-		driveSpeed.set(DoubleSolenoid.Value.kReverse);
+		driveSpeed.set(DoubleSolenoid.Value.kForward);
+
 		
 	}
 	
 	public void highGear(){
-		driveSpeed.set(DoubleSolenoid.Value.kForward);
+		driveSpeed.set(DoubleSolenoid.Value.kReverse);
+
 
 	}
 	

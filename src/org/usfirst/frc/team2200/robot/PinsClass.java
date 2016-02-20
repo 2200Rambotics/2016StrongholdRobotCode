@@ -38,20 +38,20 @@ public class PinsClass {
 		 teleArmMotor = 0;
 		 
 		 //DIO
-		 leftLineSensor = 4;
-		 rightLineSensor = 5;
+		 leftLineSensor = 8;
+		 rightLineSensor = 9;
 		 
-		 leftEncPinA = 0;
-		 leftEncPinB = 1;
+		 leftEncPinA = 7;
+		 leftEncPinB = 6;
 		 
-		 rightEncPinA = 2;
-		 rightEncPinB = 3;
+		 rightEncPinA = 5;
+		 rightEncPinB = 4;
 		 
-		 ultraLeftInput = 6;
-		 ultraLeftOutput = 7;
+		 ultraLeftInput = 3;
+		 ultraLeftOutput = 2;
 		 
-		 ultraRightInput = 8;
-		 ultraRightOutput = 9;
+		 ultraRightInput = 1;
+		 ultraRightOutput = 0;
 		 
 		 teleArmInfrared = 10;
 		 limitSwitchTeleArm = 11;

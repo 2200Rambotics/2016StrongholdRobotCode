@@ -135,8 +135,8 @@ public class Robot extends SampleRobot {
         drive.frontLeftMotor.enableBrakeMode(true);
         drive.rearRightMotor.enableBrakeMode(true);
         drive.rearLeftMotor.enableBrakeMode(true);
-
-        
+        leftEnc.reset();
+        rightEnc.reset();
         
     	String defenseSelected = (String) defenseSender.getSelected();
     	String positionSelected = (String) positionSender.getSelected();
@@ -147,19 +147,39 @@ public class Robot extends SampleRobot {
         
     	//The Autonomous to Run if Low Bar is Selected
     	if (defenseSelected == "Low Bar"){
-			SmartDashboard.putNumber("Enc M", drive.calcEncoderM());
-    		drive.driveStraightCompass(0.8, 3);
-			SmartDashboard.putNumber("Enc M", drive.calcEncoderM());
-
+    		drive.driveAngle(60);
     		/*
-    		leftEnc.reset();
-    		rightEnc.reset();
-    		drive.driveStraightCompass(0.8);
-    		if (drive.calcEncoderDistance() == 575){
-    			drive.roboDrive.tankDrive(0, 0);
+    		ahrs.reset();
+    		drive.highGear();
+    		drive.setAngles();
+			SmartDashboard.putNumber("Enc M", drive.calcEncoderM());
+			drive.driveTime(0.9, 1.9);
+			drive.lowGear();
+			Timer.delay(0.5);
+			drive.resetAngle();
+			drive.highGear();
+			Timer.delay(0.5);
+	        leftEnc.reset();
+	        rightEnc.reset();
+	        Timer.delay(0.5);
+			drive.driveStraightCompass(0.7, 3.5);
+			Timer.delay(0.5);
+			drive.lowGear();
+			drive.driveAngle(60);
+			drive.highGear();
+	        leftEnc.reset();
+	        rightEnc.reset();
+			Timer.delay(0.5);
+			drive.driveStraightCompass(0.5, 1.3);
+			*/
+			//drive.driveTime(0.6, 0.5);
+			/*
+    		drive.highGear();
+    		drive.driveStraightCompass(0.5, 1);
+			SmartDashboard.putNumber("Enc M", drive.calcEncoderM());
+*/
     		
-    		}
-    		*/
+    		
     		
     		//drive.drivey(3);
     		//auto.lowGoal();
@@ -259,6 +279,8 @@ public class Robot extends SampleRobot {
      * Runs the motors with arcade steering.
      */
     public void operatorControl() {
+    	
+    	boolean highFLip = false;
     	//SAFETY
     	leftEnc.reset();
     	rightEnc.reset();
@@ -287,7 +309,8 @@ public class Robot extends SampleRobot {
 			}
 
             //auto.testUltra();
-            
+    		SmartDashboard.putNumber("Rotations", drive.wheelRotations(leftEnc.get(), (-1*(rightEnc.get()))));
+
             SmartDashboard.putBoolean("Left",AutoClass.leftSensor.get());
             SmartDashboard.putBoolean("Right",AutoClass.rightSensor.get());
             SmartDashboard.putNumber("Ultrasonic Range:", auto.getLeftUltra());
@@ -301,6 +324,9 @@ public class Robot extends SampleRobot {
             SmartDashboard.putNumber("Left Encoder:", leftEnc.get());
             SmartDashboard.putNumber("Right Encoder:", rightEnc.get());
             
+            if (moveyController.getRawButton(3)){
+            	ahrs.reset();
+            }
             
             if(ballPickup.armUp){
             	SmartDashboard.putString("Intake Arms:","Down" );
@@ -407,19 +433,24 @@ public class Robot extends SampleRobot {
             if(moveyController.getRawButton(7)){
             	SmartDashboard.putString("Button:","7");
             	drive.lowGear();
-            	
+				highFLip = false;
             }
             
             //Change the Gear to High Gear by Clicking Button 8
             else if(moveyController.getRawButton(8)){
-            	drive.highGear();
+            	drive.lowGear();
             	SmartDashboard.putString("Button:","8");
-
+				highFLip = false;
             }
             //
             //If Neither Button is Being Pressed Set A and B to Zero
             else{
-            	drive.passivePosition();
+            	if (highFLip) {
+					drive.passivePosition();
+				} else {
+					drive.highGear();
+					highFLip = true;
+				}
             }
 
             drive.tankDrive();
