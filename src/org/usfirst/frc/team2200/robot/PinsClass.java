@@ -28,6 +28,7 @@ public class PinsClass {
 	public int ultraRightOutput;
 	public int limitSwitchTeleArm;
 	public int teleArmInfrared;
+	public int ballSensor;
 
 	
 	
@@ -55,6 +56,8 @@ public class PinsClass {
 		 
 		 teleArmInfrared = 10;
 		 limitSwitchTeleArm = 11;
+		 
+		 ballSensor = 12;
 		 
 		 //CANTalon Addresses
 		 frontLeftMotorPin = 11;

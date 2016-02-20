@@ -44,10 +44,10 @@ public class Robot extends SampleRobot {
     Solenoid variableSpeed;
     Encoder leftEnc;
     Encoder rightEnc;
-    /*
     DigitalInput limitSwitchTeleArm;
     DigitalInput teleArmInfrared;
-*/
+    DigitalInput ballSensor;
+
     
 
     public Robot() {
@@ -121,6 +121,10 @@ public class Robot extends SampleRobot {
         //Put the Choosers Onto the SmartDashboard
         SmartDashboard.putData("Robots Position", positionSender);
         SmartDashboard.putData("Defense Type", defenseSender);
+        
+        teleArmInfrared = new DigitalInput(pins.teleArmInfrared);
+        ballSensor = new DigitalInput(pins.ballSensor);
+        
 
         
     }
