@@ -90,6 +90,7 @@ public class Robot extends SampleRobot {
     public void robotInit() { 
 
           // the camera name (ex "cam0") can be found through the roborio web interface
+    	/*
     	try{
         	frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
     		session = NIVision.IMAQdxOpenCamera("cam0",NIVision.IMAQdxCameraControlMode.CameraControlModeController);NIVision.IMAQdxConfigureGrab(session);
@@ -97,7 +98,7 @@ public class Robot extends SampleRobot {
     	catch(Exception e){
     		e.printStackTrace();
     	}
-    	
+    	*/
     	
     	//Create the Choosers For Selecting Auto 
     	//One for Robot Position the Other for Defense Driving Through
@@ -271,21 +272,21 @@ public class Robot extends SampleRobot {
         drive.rearLeftMotor.enableBrakeMode(false);
         
         while (isOperatorControl() && isEnabled()) {
-        	try{
-        		NIVision.IMAQdxGrab(session, frame, 1);
-        	}
-        	catch(Exception e){
-        		e.printStackTrace();
-        	}
+//        	try{
+//        		NIVision.IMAQdxGrab(session, frame, 1);
+//        	}
+//        	catch(Exception e){
+//        		e.printStackTrace();
+//        	}
              //NIVision.imaqDrawShapeOnImage(frame, frame, rect,
              //        DrawMode.DRAW_VALUE, ShapeMode.SHAPE_OVAL, 0.0f);
-             
+            /* 
             try {
 				CameraServer.getInstance().setImage(frame);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
+*/
             //auto.testUltra();
             
             SmartDashboard.putBoolean("Left",AutoClass.leftSensor.get());
@@ -426,19 +427,20 @@ public class Robot extends SampleRobot {
             }
             
             //When Pulling Back on The Joystick Raise the Intake Arms 
-            if(shootyStick.getRawButton(7)){
+            if(shootyStick.getRawButton(5)){
             	ballPickup.upPosition();
             }
             //When Pushing Forward on The Joystick Lower the Intake Arms 
-            else if(shootyStick.getRawButton(5)){
+            else if(shootyStick.getRawButton(7)){
             	ballPickup.downPosition();
             }
             
             //When not Pushing or Pulling on the Joystick Stop Moving the Arms
+            /*
             else{
             	ballPickup.passivePosition();
             }
-            
+            */
             
             
             ballPickup.outake(shootyStick.getThrottle());
@@ -447,24 +449,11 @@ public class Robot extends SampleRobot {
             
             //When the Joystick Button 2 is Pressed Roll The Intake Rollers to Intake
 
-            //When Pulling Back on The Joystick Raise the Intake Arms 
-            if(shootyStick.getY() < -0.9){
-            	ballPickup.upPosition();
-            }
-            
-            //When Pushing Forward on The Joystick Lower the Intake Arms 
-            else if(shootyStick.getY() > 0.9){
-            	ballPickup.downPosition();
-            }
-            
-            //When not Pushing or Pulling on the Joystick Stop Moving the Arms
-            else if(shootyStick.getY() > -0.9 || shootyStick.getY() < 0.9){
-            	ballPickup.passivePosition();
-            }
+
 
             
             //While Button 6 is Being Pressed Unlock and Move Up the Arm
-            if(shootyStick.getRawButton(6)){
+            if(shootyStick.getRawButton(4)){
             	//unlock and up
             	
             	teleArm.locked();
@@ -542,16 +531,18 @@ public class Robot extends SampleRobot {
 
             
             
-            Timer.delay(0.005);		// wait for a motor update time
+            Timer.delay(0.005);	
+        }}
+    // wait for a motor update time
         
-
+/*
         try {
 			NIVision.IMAQdxStopAcquisition(session);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}}
     }
-    
+    */
     
     public static boolean getLeftLineSensor() {
     	
