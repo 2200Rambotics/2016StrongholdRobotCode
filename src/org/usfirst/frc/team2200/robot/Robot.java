@@ -327,6 +327,7 @@ public class Robot extends SampleRobot {
             
             SmartDashboard.putNumber("Left Encoder:", leftEnc.get());
             SmartDashboard.putNumber("Right Encoder:", rightEnc.get());
+            SmartDashboard.putBoolean("Ball:", ballSensor.get());
             
             if (moveyController.getRawButton(3)){
             	ahrs.reset();
@@ -419,7 +420,7 @@ public class Robot extends SampleRobot {
             	teleArm.passivePosition();
             }
             
-         /*   
+           
 
             if (!teleArmInfrared.get()){
             	teleArm.stop();
@@ -432,7 +433,7 @@ public class Robot extends SampleRobot {
 
 
 
-            */
+            
             //Change the Gear to Low Gear by Clicking Button 7
             if(moveyController.getRawButton(7)){
             	SmartDashboard.putString("Button:","7");
