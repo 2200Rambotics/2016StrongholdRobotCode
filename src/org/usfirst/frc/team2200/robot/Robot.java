@@ -122,6 +122,7 @@ public class Robot extends SampleRobot {
         SmartDashboard.putData("Robots Position", positionSender);
         SmartDashboard.putData("Defense Type", defenseSender);
         
+        limitSwitchTeleArm = new DigitalInput(pins.limitSwitchTeleArm);
         teleArmInfrared = new DigitalInput(pins.teleArmInfrared);
         ballSensor = new DigitalInput(pins.ballSensor);
         
