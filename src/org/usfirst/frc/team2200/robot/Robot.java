@@ -493,7 +493,7 @@ public class Robot extends SampleRobot {
 			NIVision.IMAQdxStopAcquisition(session);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}}
+		}
     }
     
     
