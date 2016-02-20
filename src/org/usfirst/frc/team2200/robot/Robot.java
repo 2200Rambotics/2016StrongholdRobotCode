@@ -270,6 +270,7 @@ public class Robot extends SampleRobot {
         drive.frontLeftMotor.enableBrakeMode(false);
         drive.rearRightMotor.enableBrakeMode(false);
         drive.rearLeftMotor.enableBrakeMode(false);
+        boolean highFlip = true;
         
         while (isOperatorControl() && isEnabled()) {
 //        	try{
@@ -421,10 +422,7 @@ public class Robot extends SampleRobot {
             	ballPickup.openDoor(1);
             		
             }
-            
-            if(shootyStick.getRawButton(4)){
-            	teleArm.locked();
-            }
+
             
             //When Pulling Back on The Joystick Raise the Intake Arms 
             if(shootyStick.getRawButton(5)){
@@ -488,19 +486,24 @@ public class Robot extends SampleRobot {
             if(moveyController.getRawButton(7)){
             	SmartDashboard.putString("Button:","7");
             	drive.lowGear();
-            	
+				highFlip = false;
             }
             
             //Change the Gear to High Gear by Clicking Button 8
             else if(moveyController.getRawButton(8)){
-            	drive.highGear();
+            	drive.lowGear();
             	SmartDashboard.putString("Button:","8");
-
+				highFlip = false;
             }
             //
             //If Neither Button is Being Pressed Set A and B to Zero
             else{
-            	drive.passivePosition();
+            	if (highFlip) {
+					drive.passivePosition();
+				} else {
+					drive.highGear();
+					highFlip = true;
+				}
             }
 
             drive.tankDrive();
